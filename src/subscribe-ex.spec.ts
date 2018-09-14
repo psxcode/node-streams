@@ -2,9 +2,9 @@ import { expect } from 'chai'
 import * as sinon from 'sinon'
 import { makeNumbers, readable, waitForEvents } from 'node-stream-test'
 import { waitTimePromise as wait } from '@psxcode/wait'
+import debug from 'debug'
 import subscribeEx from './subscribe-ex'
 import { EmitterValue } from './types'
-import debug from 'debug'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)

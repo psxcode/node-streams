@@ -6,8 +6,8 @@ import {
   transformTest,
   writable
 } from 'node-stream-test'
-import side from './side'
 import debug from 'debug'
+import side from './side'
 
 const log = debug('producer')
 

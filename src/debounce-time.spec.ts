@@ -1,6 +1,6 @@
 import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
-import debounceTime from './debounce-time'
 import debug from 'debug'
+import debounceTime from './debounce-time'
 
 const log = debug('producer')
 

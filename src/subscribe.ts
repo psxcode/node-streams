@@ -1,8 +1,7 @@
-import noop from './noop'
-import on from './on'
-import onceAll from './once-all'
-import { IObserver } from './types'
+import { on, onceAll } from 'node-on'
 import ReadableStream = NodeJS.ReadableStream
+import noop from './noop'
+import { IObserver } from './types'
 
 const subscribe = ({ next, error, complete = noop }: IObserver) =>
   (...streams: ReadableStream[]) => {

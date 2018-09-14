@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, readable, readableTest } from 'node-stream-test'
-import startWith from './start-with'
 import debug from 'debug'
+import startWith from './start-with'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)

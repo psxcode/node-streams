@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
-import reduce from './reduce'
 import debug from 'debug'
+import reduce from './reduce'
 
 const log = debug('producer')
 

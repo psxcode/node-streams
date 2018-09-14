@@ -1,8 +1,7 @@
 /* tslint:disable no-conditional-assignment */
+import { onceAll, onEx } from 'node-on'
 import ReadableStream = NodeJS.ReadableStream
 import noop from './noop'
-import onEx from './on-ex'
-import onceAll from './once-all'
 import { IObserverEx } from './types'
 
 const subscribeEx = ({ next, error, complete = noop }: IObserverEx) =>

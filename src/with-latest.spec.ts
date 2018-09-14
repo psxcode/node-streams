@@ -5,8 +5,8 @@ import {
   readable,
   readableTest
 } from 'node-stream-test'
-import withLatest from './with-latest'
 import debug from 'debug'
+import withLatest from './with-latest'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)

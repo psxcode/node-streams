@@ -1,9 +1,9 @@
 import { expect } from 'chai'
 import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import debug from 'debug'
 import filter from './filter'
 import first from './first'
 import map from './map'
-import debug from 'debug'
 
 const log = debug('producer')
 

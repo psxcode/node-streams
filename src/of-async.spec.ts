@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, makeNumbers, readableTest } from 'node-stream-test'
-import ofAsync from './of-async'
 import debug from 'debug'
+import ofAsync from './of-async'
 
 const log = debug('producer')
 

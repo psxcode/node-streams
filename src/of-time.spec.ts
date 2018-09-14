@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, makeNumbers, readableTest } from 'node-stream-test'
-import ofTime from './of-time'
 import debug from 'debug'
+import ofTime from './of-time'
 
 const log = debug('producer')
 

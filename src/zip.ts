@@ -1,7 +1,7 @@
 import ReadableStream = NodeJS.ReadableStream
 import { Readable, ReadableOptions } from 'stream'
+import { onEx } from 'node-on'
 import subscribeEx from './subscribe-ex'
-import onEx from './on-ex'
 import empty from './empty'
 import { EmitterValue, UnsubFn } from './types'
 

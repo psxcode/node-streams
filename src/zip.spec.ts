@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, makeNumbers, readable, readableTest } from 'node-stream-test'
-import zip from './zip'
 import debug from 'debug'
+import zip from './zip'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)

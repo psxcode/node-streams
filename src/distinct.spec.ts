@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { readable, transformTest, writable } from 'node-stream-test'
-import distinct from './distinct'
 import debug from 'debug'
+import distinct from './distinct'
 
 const log = debug('producer')
 

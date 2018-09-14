@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, makeStrings, readableTest } from 'node-stream-test'
-import empty from './empty'
 import debug from 'debug'
+import empty from './empty'
 
 const log = debug('consumer')
 

@@ -6,8 +6,8 @@ import {
   transformTest,
   writable
 } from 'node-stream-test'
-import map from './map'
 import debug from 'debug'
+import map from './map'
 
 const log = debug('producer')
 

@@ -1,7 +1,7 @@
+import ReadableStream = NodeJS.ReadableStream
 import { ReadableOptions } from 'stream'
 import concat from './concat'
 import of from './of'
-import ReadableStream = NodeJS.ReadableStream
 
 const startWith = (opts: ReadableOptions) =>
   <T> (...values: T[]) =>

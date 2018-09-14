@@ -1,6 +1,6 @@
 import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
-import throttleTime from './throttle-time'
 import debug from 'debug'
+import throttleTime from './throttle-time'
 
 const log = debug('producer')
 

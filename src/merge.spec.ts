@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { dataConsumer, readable, readableTest } from 'node-stream-test'
-import merge from './merge'
 import debug from 'debug'
+import merge from './merge'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)
