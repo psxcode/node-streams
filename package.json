@@ -32,6 +32,6 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "node-on": "^0.1.0"
+    "node-on": "^0.1.3"
   }
 }
