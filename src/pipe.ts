@@ -11,11 +11,8 @@ const flatten = <T> (values: (T | T[])[]): T[] => {
 
 const pipe = (...streams: (ReadWriteStream | ReadWriteStream[])[]): ReadWriteStream[] => {
   const fls = flatten(streams)
-  for (let i = 0, l = fls.length; i < l; ++i) {
-    fls[i].unpipe()
-    if (i + 1 < l) {
-      fls[i].pipe(fls[i + 1])
-    }
+  for (let i = 1, l = fls.length; i < l; ++i) {
+    fls[i - 1].unpipe().pipe(fls[i])
   }
   return fls
 }
