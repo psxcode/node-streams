@@ -16,7 +16,7 @@ xdescribe('[ combine ]', () => {
       const s3 = readable({ delayMs: 8, log: prodLog() })({ objectMode: true })(data)
       return combine({ objectMode: true })(s1, s2, s3)
     },
-    dataConsumer(consLog),
+    dataConsumer({ log: consLog }),
     (data, spy) => {
       expect(spy.data().length).eq(15)
     })

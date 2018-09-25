@@ -14,8 +14,9 @@ const interval = (next: () => void) => {
 }
 
 xdescribe('[throttle]', () => {
-  transformTest<number>(makeNumbers(8),
-    (data) => readable({ delayMs: 0, log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+  transformTest<number>(
+    makeNumbers(8),
+    readable({ delayMs: 0, log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => throttle({ objectMode: true })(interval))
 })

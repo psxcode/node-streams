@@ -9,7 +9,7 @@ xdescribe('[ empty ]', () => {
   readableTest(
     makeStrings(4),
     empty({ objectMode: true }),
-    dataConsumer(log),
+    dataConsumer({ log }),
     (data, spy) => {
       expect(spy.callCount()).eq(0)
     })

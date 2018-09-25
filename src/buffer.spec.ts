@@ -16,7 +16,7 @@ const interval = (next: () => void) => {
 xdescribe('[ buffer ]', () => {
   transformTest(
     makeNumbers(4),
-    (data) => readable({ delayMs: 5, log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+    readable({ delayMs: 5, log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => buffer({ objectMode: true })(interval))
 })

@@ -9,7 +9,7 @@ xdescribe('[ from ]', () => {
   readableTest(
     makeNumbers(8),
     from({ objectMode: true }),
-    dataConsumer(log),
+    dataConsumer({ log }),
     (data, spy) => {
       expect(Array.from(data).length).eq(spy.callCount())
     })

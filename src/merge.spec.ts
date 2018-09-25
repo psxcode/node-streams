@@ -15,7 +15,7 @@ xdescribe('[ merge ]', () => {
       const s2 = readable({ delayMs: 10, log: prodLog() })({ objectMode: true })(data)
       return merge({ objectMode: true })(s1, s2)
     },
-    dataConsumer(consLog),
+    dataConsumer({ log: consLog }),
     (data, spy) => {
       expect(spy.data().length).eq(10)
     })

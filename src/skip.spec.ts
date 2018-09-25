@@ -6,9 +6,10 @@ import skip from './skip'
 const log = debug('producer')
 
 xdescribe('[ skip ]', () => {
-  transformTest<number>(makeNumbers(8),
-    (data) => readable({ log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+  transformTest<number>(
+    makeNumbers(8),
+    readable({ log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => skip({ objectMode: true })(5),
     (data, spy) => {
       expect(spy.data()).deep.eq(Array.from(data).slice(5))

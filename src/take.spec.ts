@@ -6,9 +6,10 @@ import take from './take'
 const log = debug('producer')
 
 describe.skip('[ take ]', () => {
-  transformTest<number>(makeNumbers(8),
-    (data) => readable({ log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+  transformTest<number>(
+    makeNumbers(8),
+    readable({ log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => take({ objectMode: true })(5),
     (data, spy) => {
       expect(spy.data()).deep.eq(Array.from(data).slice(0, 5))

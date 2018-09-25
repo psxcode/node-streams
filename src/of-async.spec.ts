@@ -17,7 +17,7 @@ xdescribe('[ ofAsync ]', () => {
   readableTest<number>(
     makeNumbers(4),
     (data) => ofAsync({ objectMode: true })(interval)(...data),
-    (readable, sink) => dataConsumer(log)(readable, sink),
+    dataConsumer({ log }),
     (data, spy) => {
       expect(spy.data()).deep.eq(Array.from(data))
     })

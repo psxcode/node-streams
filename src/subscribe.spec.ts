@@ -7,7 +7,6 @@ import subscribe from './subscribe'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)
-const consLog = debug('cons')
 
 describe('[ subscribe ]', () => {
   xit('should work with single stream', async () => {

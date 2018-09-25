@@ -9,7 +9,7 @@ xdescribe('[ ofTime ]', () => {
   readableTest<number>(
     makeNumbers(4),
     (data) => ofTime({ objectMode: true })(30)(...data),
-    (readable, sink) => dataConsumer(log)(readable, sink),
+    dataConsumer({ log }),
     (data, spy) => {
       expect(spy.data()).deep.eq(Array.from(data))
     })

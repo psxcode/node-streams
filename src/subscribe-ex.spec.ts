@@ -8,13 +8,12 @@ import { EmitterValue } from './types'
 
 let i = 0
 const prodLog = () => debug(`prod${i++}`)
-const consLog = debug('cons')
 
 describe('[ subscribeEx ]', () => {
   xit('should work with single stream', async () => {
     const d1 = [0, 1]
     const s1 = readable({ log: prodLog() })({ objectMode: true })(d1)
-    const expextedData: EmitterValue[] = Array.from(d1).map((v) => ({ value: v, emitterIndex: 0, emitter: s1 }))
+    const expectedData: EmitterValue[] = Array.from(d1).map((v) => ({ value: v, emitterIndex: 0, emitter: s1 }))
     const receivedData: number[] = []
     const spy = sinon.spy((data: any) => receivedData.push(data))
 
@@ -23,7 +22,7 @@ describe('[ subscribeEx ]', () => {
 
     await waitForEvents('end', 'error')(s1)
     await wait(20)
-    expect(receivedData).deep.eq(expextedData)
+    expect(receivedData).deep.eq(expectedData)
   })
 
   xit('should work with multiple streams', async () => {

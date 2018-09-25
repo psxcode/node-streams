@@ -8,9 +8,10 @@ const log = debug('producer')
 const addAll = (acc = 0, value: number) => acc + value
 
 xdescribe('[ scan ]', () => {
-  transformTest<number>(makeNumbers(8),
-    (data) => readable({ log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+  transformTest<number>(
+    makeNumbers(8),
+    readable({ log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => scan({ objectMode: true })(addAll),
     (data, spy) => {
       expect(spy.data()).deep.eq(

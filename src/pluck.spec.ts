@@ -19,9 +19,10 @@ const makeNumbers = (length: number): Iterable<{ value: number }> => ({
 })
 
 xdescribe('[ pluck ]', () => {
-  transformTest(makeNumbers(8),
-    (data) => readable({ log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+  transformTest(
+    makeNumbers(8),
+    readable({ log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => [
       pluck({ objectMode: true })('value'),
       filter({ objectMode: true })(isEqual(10)),

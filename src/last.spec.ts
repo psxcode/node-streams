@@ -13,8 +13,8 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 xdescribe('[ last ]', () => {
   transformTest(
     makeNumbers(4),
-    (data) => readable({ log })({ objectMode: true })(data),
-    (spy) => writable({})({ objectMode: true })(spy),
+    readable({ log })({ objectMode: true }),
+    writable({})({ objectMode: true }),
     () => [
       filter({ objectMode: true })(isEqual(10)),
       last({ objectMode: true })(),

@@ -15,7 +15,7 @@ xdescribe('[ concat ]', () => {
       const s2 = readable({ delayMs: 10, log: prodLog() })({ objectMode: true })(data)
       return concat({ objectMode: true })(s1, s2)
     },
-    dataConsumer(consLog),
+    dataConsumer({ log: consLog }),
     (data, spy) => {
       expect(spy.data()).deep.eq([0, 1, 2, 3, 4, 0, 1, 2, 3, 4])
     })
