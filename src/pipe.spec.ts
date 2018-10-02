@@ -18,7 +18,7 @@ xdescribe('[ pipe ]', () => {
     writable({})({ objectMode: true }),
     () => pipe(
       filter({ objectMode: true })(isEqual(10)),
-      first({ objectMode: true })(),
+      first({ objectMode: true }),
       map({ objectMode: true })(multiply(2))
     ),
     (data, spy) => {

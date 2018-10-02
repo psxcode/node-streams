@@ -23,7 +23,7 @@ const merge = (opts: ReadableOptions) => (...streams: ReadableStream[]): Readabl
         unsubscribe = undefined
       }
     })
-    : empty(opts)()
+    : empty(opts)
 }
 
 export default merge
