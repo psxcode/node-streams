@@ -2,23 +2,26 @@ import ReadableStream = NodeJS.ReadableStream
 import { Readable, ReadableOptions } from 'stream'
 import empty from './empty'
 import subscribeEx from './subscribe-ex'
-import { EmitterValue, UnsubFn } from './types'
+import { UnsubFn } from './types'
 
 const combine = (opts: ReadableOptions) => (...streams: ReadableStream[]): ReadableStream => {
   let unsubscribe: UnsubFn
-  let latest = new Array(streams.length)
+  let latest = streams.map(() => undefined)
   return streams.length
     ? new Readable({
       ...opts,
       read () {
         if (!unsubscribe) {
           unsubscribe = subscribeEx({
-            next: ({ value, emitterIndex }: EmitterValue) => {
+            next: ({ value, emitterIndex }) => {
               latest[emitterIndex] = value
               this.push(latest.slice())
             },
-            error: ({ value }: EmitterValue) => this.emit('error', value),
-            complete: () => this.push(null)
+            error: ({ value }) => this.emit('error', value),
+            complete: () => {
+              this.push(null)
+              this.destroy()
+            }
           })(...streams)
         }
       },
@@ -27,7 +30,7 @@ const combine = (opts: ReadableOptions) => (...streams: ReadableStream[]): Reada
         unsubscribe = undefined
       }
     })
-    : empty(opts)()
+    : empty(opts)
 }
 
 export default combine
