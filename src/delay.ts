@@ -1,17 +1,16 @@
 import { Transform, TransformOptions } from 'stream'
-import { WaitPromiseFn } from './types'
 
 type DelayItem = {
   timestamp: number
   data: any
 }
 
-const delay = (opts: TransformOptions) =>
- (wait: WaitPromiseFn, timestamp: () => number) =>
-  (ms: number) => {
+export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp = Date.now) =>
+  (opts: TransformOptions) => (ms: number) => {
     const buffer: DelayItem[] = []
     let inProgress = false
     let endCallback: any
+
     function consume (this: Transform) {
       const item = buffer.shift()
       inProgress = !!item
@@ -21,15 +20,16 @@ const delay = (opts: TransformOptions) =>
           this.push(item.data)
           return consume.call(this)
         } else {
-          wait(shouldGoIn).then(() => {
+          timeout(() => {
             this.push(item.data)
             return consume.call(this)
-          })
+          }, shouldGoIn)
         }
       } else {
         endCallback && endCallback()
       }
     }
+
     return new Transform({
       ...opts,
       transform (chunk, encoding, callback) {
@@ -48,4 +48,4 @@ const delay = (opts: TransformOptions) =>
     })
   }
 
-export default delay
+export default delayRaw()
