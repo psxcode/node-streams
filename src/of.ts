@@ -1,7 +1,7 @@
 /* tslint:disable no-empty */
 import { Readable, ReadableOptions } from 'stream'
 
-const of = <T> (opts: ReadableOptions) => (...values: T[]) => {
+const of = (opts: ReadableOptions) => <T> (...values: T[]) => {
   let i = 0
   return new Readable({
     ...opts,
