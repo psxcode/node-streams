@@ -1,6 +1,6 @@
 import { Readable, ReadableOptions } from 'stream'
 
-const empty = (opts: ReadableOptions) => () =>
+const empty = (opts: ReadableOptions = {}) =>
   new Readable({
     ...opts,
     read () {
