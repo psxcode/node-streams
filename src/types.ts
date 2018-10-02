@@ -1,7 +1,6 @@
 import EventEmitter = NodeJS.EventEmitter
 
 export type WaitFn = (cb: () => void) => () => void
-export type WaitPromiseFn = (ms: number) => Promise<any>
 export type UnsubFn = (() => void) | undefined
 
 export type EmitterValue = {
