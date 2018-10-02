@@ -1,6 +1,6 @@
 import { Transform, TransformOptions } from 'stream'
 
-const last = (opts: TransformOptions) => () => {
+const last = (opts: TransformOptions) => {
   let value: any
   return new Transform({
     ...opts,

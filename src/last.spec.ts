@@ -17,7 +17,7 @@ xdescribe('[ last ]', () => {
     writable({})({ objectMode: true }),
     () => [
       filter({ objectMode: true })(isEqual(10)),
-      last({ objectMode: true })(),
+      last({ objectMode: true }),
       map({ objectMode: true })(multiply(2))
     ],
     (data, spy) => {
