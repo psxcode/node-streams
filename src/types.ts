@@ -1,13 +1,7 @@
-import EventEmitter = NodeJS.EventEmitter
+import { EmitterValue } from 'node-on'
 
 export type WaitFn = (cb: () => void) => () => void
 export type UnsubFn = (() => void) | undefined
-
-export type EmitterValue = {
-  value: any
-  emitter: EventEmitter
-  emitterIndex: number
-}
 
 export interface IObserver {
   next: (chunk: any) => void

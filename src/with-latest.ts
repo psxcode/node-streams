@@ -3,7 +3,6 @@ import { Readable, ReadableOptions } from 'stream'
 import subscribe from './subscribe'
 import subscribeEx from './subscribe-ex'
 import empty from './empty'
-import { EmitterValue } from './types'
 
 const withLatest = (opts: ReadableOptions) =>
   (...streams: ReadableStream[]) => (main: ReadableStream): ReadableStream => {
@@ -29,13 +28,13 @@ const withLatest = (opts: ReadableOptions) =>
               }
             })(main)
             unsubscribeRest = subscribeEx({
-              next: ({ value, emitterIndex }: EmitterValue) => latest[emitterIndex] = value
+              next: ({ value, emitterIndex }) => latest[emitterIndex] = value
             })(...streams)
           }
         },
         destroy: unsub
       })
-      : empty(opts)()
+      : empty(opts)
   }
 
 export default withLatest

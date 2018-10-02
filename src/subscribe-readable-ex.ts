@@ -11,10 +11,10 @@ const subscribeReadableEx = ({ next, error, complete = noop }: IObserverEx) =>
       complete()
     }
     const unsub = [
-      onEx('readable')(({ emitter, emitterIndex }) => {
+      onEx('readable')(({ index, emitter, emitterIndex, event }) => {
         let value
         while (value = (emitter as ReadableStream).read()) {
-          next({ value, emitter, emitterIndex })
+          next({ value, index, emitter, emitterIndex, event })
         }
       })(...streams),
       error ? on('error')(error)(...streams) : noop,

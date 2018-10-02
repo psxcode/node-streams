@@ -3,7 +3,7 @@ import { Readable, ReadableOptions } from 'stream'
 import { onEx } from 'node-on'
 import subscribeEx from './subscribe-ex'
 import empty from './empty'
-import { EmitterValue, UnsubFn } from './types'
+import { UnsubFn } from './types'
 
 const zip = (opts: ReadableOptions) =>
 (...streams: ReadableStream[]): ReadableStream => {
@@ -24,7 +24,7 @@ const zip = (opts: ReadableOptions) =>
       read () {
         if (!unsubscribe) {
           unsubscribe = subscribeEx({
-            next: ({ value, emitterIndex }: EmitterValue) => {
+            next: ({ value, emitterIndex }) => {
               latest[emitterIndex].push(value)
               if (hasValueForZip()) {
                 this.push(latest.map(l => l.shift()))
@@ -34,9 +34,9 @@ const zip = (opts: ReadableOptions) =>
                 }
               }
             },
-            error: ({ value }: EmitterValue) => this.emit('error', value)
+            error: ({ value }) => this.emit('error', value)
           })(...streams)
-          unsubscribeEnd = onEx('end')(({ emitterIndex }: EmitterValue) => {
+          unsubscribeEnd = onEx('end')(({ emitterIndex }) => {
             done[emitterIndex] = true
             if (checkDone()) {
               this.push(null)
@@ -47,7 +47,7 @@ const zip = (opts: ReadableOptions) =>
       },
       destroy: unsub
     })
-    : empty(opts)()
+    : empty(opts)
 }
 
 export default zip
