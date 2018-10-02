@@ -33,7 +33,7 @@ const concat = (opts: ReadableOptions) =>
         unsubscribe = undefined
       }
     })
-    : empty(opts)()
+    : empty(opts)
   }
 
 export default concat
