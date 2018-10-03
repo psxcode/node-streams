@@ -1,18 +1,15 @@
 {
   "name": "node-streams",
   "version": "0.0.0",
-  "main": "build/index.js",
-  "module": "build/index",
-  "typings": "build/index.d.ts",
-  "files": [
-    "build"
-  ],
-  "private": false,
+  "main": "index.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
   "license": "MIT",
   "author": "psxcode <psxcode@gmail.com> (https://github.com/psxcode)",
   "homepage": "https://github.com/psxcode/node-streams",
   "scripts": {
     "test": "mocha --opts mocha.opts",
+    "copy": "cp ./{package.json,LICENSE,readme.md} ./build/",
     "build": "rimraf build && tsc -p tsconfig.build.json"
   },
   "devDependencies": {
@@ -30,7 +27,7 @@
     "rimraf": "^2.6.2",
     "sinon": "^6.3.4",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.1.1"
   },
   "dependencies": {
     "node-on": "^0.1.3"
