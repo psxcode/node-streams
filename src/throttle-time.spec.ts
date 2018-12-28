@@ -4,7 +4,7 @@ import throttleTime from './throttle-time'
 
 const log = debug('producer')
 
-xdescribe('[ throttleTime ]', () => {
+describe('[ throttleTime ]', () => {
   transformTest<number>(
     makeNumbers(8),
     readable({ delayMs: 0, log })({ objectMode: true }),

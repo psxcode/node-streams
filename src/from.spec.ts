@@ -5,7 +5,7 @@ import from from './from'
 
 const log = debug('consumer')
 
-xdescribe('[ from ]', () => {
+describe('[ from ]', () => {
   readableTest(
     makeNumbers(8),
     from({ objectMode: true }),

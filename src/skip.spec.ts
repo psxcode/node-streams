@@ -5,7 +5,7 @@ import skip from './skip'
 
 const log = debug('producer')
 
-xdescribe('[ skip ]', () => {
+describe('[ skip ]', () => {
   transformTest<number>(
     makeNumbers(8),
     readable({ log })({ objectMode: true }),

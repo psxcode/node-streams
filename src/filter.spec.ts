@@ -7,7 +7,7 @@ const log = debug('producer')
 
 const isEven = (value: number) => value % 2 === 0
 
-xdescribe('[ filter ]', () => {
+describe('[ filter ]', () => {
   transformTest(
     makeNumbers(8),
     readable({ log })({ objectMode: true }),

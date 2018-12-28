@@ -7,7 +7,7 @@ let i = 0
 const prodLog = () => debug(`prod${i++}`)
 const consLog = debug('cons')
 
-xdescribe('[ concat ]', () => {
+describe('[ concat ]', () => {
   readableTest([5, 6, 7, 8, 9],
     (data) => {
       const s1 = readable({ delayMs: 50, log: prodLog() })({ objectMode: true })(data)

@@ -7,7 +7,7 @@ let i = 0
 const prodLog = () => debug(`prod${i++}`)
 const consLog = debug('cons')
 
-xdescribe('[ merge ]', () => {
+describe('[ merge ]', () => {
   readableTest(
     [0, 1, 2, 3, 4],
     (data) => {

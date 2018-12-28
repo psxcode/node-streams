@@ -5,7 +5,7 @@ import of from './of'
 
 const log = debug('producer')
 
-xdescribe('[ of ]', () => {
+describe('[ of ]', () => {
   readableTest<number>(
     makeNumbers(4),
     (data) => of({ objectMode: true })(...data),

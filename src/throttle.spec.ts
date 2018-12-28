@@ -13,7 +13,7 @@ const interval = (next: () => void) => {
   }
 }
 
-xdescribe('[throttle]', () => {
+describe('[throttle]', () => {
   transformTest<number>(
     makeNumbers(8),
     readable({ delayMs: 0, log })({ objectMode: true }),

@@ -18,7 +18,7 @@ const makeNumbers = (length: number): Iterable<{ value: number }> => ({
   }
 })
 
-xdescribe('[ pluck ]', () => {
+describe('[ pluck ]', () => {
   transformTest(
     makeNumbers(8),
     readable({ log })({ objectMode: true }),

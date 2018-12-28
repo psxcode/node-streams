@@ -7,7 +7,7 @@ let i = 0
 const prodLog = () => debug(`prod${i++}`)
 const consLog = debug('cons')
 
-xdescribe('[ zip ]', () => {
+describe('[ zip ]', () => {
   readableTest(
     makeNumbers(5),
     (data) => {

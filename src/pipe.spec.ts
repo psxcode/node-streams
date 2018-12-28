@@ -11,7 +11,7 @@ const log = debug('producer')
 const isEqual = (value: number) => (arg: number) => value === arg
 const multiply = (multiplier: number) => (value: number) => value * multiplier
 
-xdescribe('[ pipe ]', () => {
+describe('[ pipe ]', () => {
   transformTest<number>(
     makeNumbers(4),
     readable({ log })({ objectMode: true }),

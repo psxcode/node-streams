@@ -4,7 +4,7 @@ import bufferTime from './buffer-time'
 
 const log = debug('producer')
 
-xdescribe('[ bufferTime ]', () => {
+describe('[ bufferTime ]', () => {
   transformTest(
     makeNumbers(4),
     readable({ delayMs: 5, log })({ objectMode: true }),

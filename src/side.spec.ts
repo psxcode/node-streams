@@ -7,7 +7,7 @@ const log = debug('producer')
 
 const multiply = (multiplier: number) => (value: number) => value * multiplier
 
-xdescribe('[ side ]', () => {
+describe('[ side ]', () => {
   transformTest<string>(
     makeStrings(8),
     readable({ log })({ encoding: 'utf8' }),

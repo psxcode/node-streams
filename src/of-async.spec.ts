@@ -5,7 +5,7 @@ import ofAsync from './of-async'
 
 const log = debug('producer')
 
-xdescribe('[ ofAsync ]', () => {
+describe('[ ofAsync ]', () => {
   const interval = (next: () => void) => {
     console.log('subscribe')
     const id = setTimeout(next, 30)

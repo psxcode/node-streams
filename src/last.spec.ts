@@ -10,7 +10,7 @@ const log = debug('producer')
 const isEqual = (value: number) => (arg: number) => value === arg
 const multiply = (multiplier: number) => (value: number) => value * multiplier
 
-xdescribe('[ last ]', () => {
+describe('[ last ]', () => {
   transformTest(
     makeNumbers(4),
     readable({ log })({ objectMode: true }),

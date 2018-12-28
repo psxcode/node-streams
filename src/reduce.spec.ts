@@ -7,7 +7,7 @@ const log = debug('producer')
 
 const addAll = (acc = 0, value: number) => acc + value
 
-xdescribe('[ reduce ]', () => {
+describe('[ reduce ]', () => {
   transformTest<number>(
     makeNumbers(8),
     readable({ log })({ objectMode: true }),

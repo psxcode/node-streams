@@ -13,7 +13,7 @@ const interval = (next: () => void) => {
   }
 }
 
-xdescribe('[ buffer ]', () => {
+describe('[ buffer ]', () => {
   transformTest(
     makeNumbers(4),
     readable({ delayMs: 5, log })({ objectMode: true }),

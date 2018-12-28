@@ -12,7 +12,7 @@ let i = 0
 const prodLog = () => debug(`prod${i++}`)
 const consLog = debug('cons')
 
-xdescribe('[ withLatest ]', () => {
+describe('[ withLatest ]', () => {
   readableTest(
     makeNumbers(8),
     (data) => {

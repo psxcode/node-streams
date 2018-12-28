@@ -5,7 +5,7 @@ import { delayRaw } from './delay'
 
 const log = debug('producer')
 
-xdescribe('[ delay ]', () => {
+describe('[ delay ]', () => {
   transformTest<number>(
     makeNumbers(8),
     readable({ delayMs: 30, log })({ objectMode: true }),

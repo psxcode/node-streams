@@ -5,7 +5,7 @@ import distinct from './distinct'
 
 const log = debug('producer')
 
-xdescribe('[ distinct ]', () => {
+describe('[ distinct ]', () => {
   const isEqual = <T> (a: T, b: T) => a === b
 
   transformTest<number>(

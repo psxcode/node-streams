@@ -4,7 +4,7 @@ import debounceTime from './debounce-time'
 
 const log = debug('producer')
 
-xdescribe('[debounceTime]', () => {
+describe('[debounceTime]', () => {
   transformTest(
     makeNumbers(4),
     readable({ delayMs: 0, log })({ objectMode: true }),

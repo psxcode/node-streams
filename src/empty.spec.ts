@@ -5,7 +5,7 @@ import empty from './empty'
 
 const log = debug('consumer')
 
-xdescribe('[ empty ]', () => {
+describe('[ empty ]', () => {
   readableTest(
     makeStrings(4),
     () => empty({ objectMode: true }),

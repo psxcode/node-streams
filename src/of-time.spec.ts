@@ -5,7 +5,7 @@ import ofTime from './of-time'
 
 const log = debug('producer')
 
-xdescribe('[ ofTime ]', () => {
+describe('[ ofTime ]', () => {
   readableTest<number>(
     makeNumbers(4),
     (data) => ofTime({ objectMode: true })(30)(...data),
