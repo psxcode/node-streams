@@ -2,6 +2,7 @@ import { Transform, TransformOptions } from 'stream'
 
 const first = (opts: TransformOptions) => {
   let fulfilled = false
+
   return new Transform({
     ...opts,
     transform (chunk, encoding, callback) {
@@ -11,7 +12,7 @@ const first = (opts: TransformOptions) => {
         fulfilled = true
       }
       callback()
-    }
+    },
   })
 }
 

@@ -10,7 +10,7 @@ const side = (opts: TransformOptions) => <T> (sideFn: (value: T) => void) =>
         return callback(e)
       }
       callback(undefined, chunk)
-    }
+    },
   })
 
 export default side

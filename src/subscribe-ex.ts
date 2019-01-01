@@ -13,12 +13,13 @@ const subscribeEx = ({ next, error, complete = noop }: IObserverEx) =>
     const unsub = [
       onEx('data')(next)(...streams),
       error ? onEx('error')(error)(...streams) : noop,
-      onceAll('end')(onComplete)(...streams)
+      onceAll('end')(onComplete)(...streams),
     ]
+
     return unsubscribe
 
     function unsubscribe () {
-      for (let u of unsub) u()
+      for (const u of unsub) u()
     }
   }
 

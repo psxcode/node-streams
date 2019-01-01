@@ -8,31 +8,33 @@ const withLatest = (opts: ReadableOptions) =>
   (...streams: ReadableStream[]) => (main: ReadableStream): ReadableStream => {
     let unsubscribeMain: (() => void) | undefined
     let unsubscribeRest: (() => void) | undefined
-    let latest = new Array(streams.length)
+    const latest = new Array(streams.length)
     const unsub = () => {
       unsubscribeMain && unsubscribeMain()
       unsubscribeRest && unsubscribeRest()
-      unsubscribeMain = unsubscribeRest = undefined
+      unsubscribeMain = undefined
+      unsubscribeRest = undefined
     }
+
     return streams.length
       ? new Readable({
         ...opts,
         read () {
           if (!unsubscribeMain) {
             unsubscribeMain = subscribe({
-              next: value => this.push([value, ...latest]),
-              error: e => this.emit('error', e),
+              next: (value) => this.push([value, ...latest]),
+              error: (e) => this.emit('error', e),
               complete: () => {
                 this.push(null)
                 unsub()
-              }
+              },
             })(main)
             unsubscribeRest = subscribeEx({
-              next: ({ value, emitterIndex }) => latest[emitterIndex] = value
+              next: ({ value, emitterIndex }) => latest[emitterIndex] = value,
             })(...streams)
           }
         },
-        destroy: unsub
+        destroy: unsub,
       })
       : empty(opts)
   }

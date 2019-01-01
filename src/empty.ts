@@ -5,7 +5,7 @@ const empty = (opts: ReadableOptions = {}) =>
     ...opts,
     read () {
       this.push(null)
-    }
+    },
   })
 
 export default empty

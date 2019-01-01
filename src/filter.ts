@@ -11,7 +11,7 @@ const filter = (opts: TransformOptions) => <T> (predicate: (value: T) => boolean
         return callback(e)
       }
       callback(undefined, res ? chunk : undefined)
-    }
+    },
   })
 
 export default filter

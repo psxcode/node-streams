@@ -8,6 +8,7 @@ const concat = (opts: ReadableOptions) =>
   (...streams: ReadableStream[]): ReadableStream => {
     let unsubscribe: UnsubFn
     let index = 0
+
     function read (this: Readable) {
       if (!unsubscribe) {
         if (index >= streams.length) {
@@ -18,22 +19,24 @@ const concat = (opts: ReadableOptions) =>
             error: (e) => this.emit('error', e),
             complete: () => {
               unsubscribe = undefined
+
               return read.call(this)
-            }
+            },
           })(streams[index++])
         }
       }
     }
+
     return streams.length
-    ? new Readable({
-      ...opts,
-      read,
-      destroy () {
-        unsubscribe && unsubscribe()
-        unsubscribe = undefined
-      }
-    })
-    : empty(opts)
+      ? new Readable({
+        ...opts,
+        read,
+        destroy () {
+          unsubscribe && unsubscribe()
+          unsubscribe = undefined
+        },
+      })
+      : empty(opts)
   }
 
 export default concat

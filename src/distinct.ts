@@ -3,6 +3,7 @@ import { Transform, TransformOptions } from 'stream'
 const distinct = (opts: TransformOptions) =>
 <T> (isEqual: (a: T, b: T) => boolean) => {
   let lastChunk: T
+
   return new Transform({
     ...opts,
     transform (chunk: any, encoding, callback) {
@@ -11,7 +12,7 @@ const distinct = (opts: TransformOptions) =>
         this.push(lastChunk)
       }
       callback()
-    }
+    },
   })
 }
 

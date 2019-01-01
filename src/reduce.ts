@@ -2,6 +2,7 @@ import { Transform, TransformOptions } from 'stream'
 
 const reduce = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T) => R) => {
   let state: any
+
   return new Transform({
     ...opts,
     transform (chunk: any, encoding, callback) {
@@ -14,7 +15,7 @@ const reduce = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T)
     },
     flush (callback) {
       callback(undefined, state)
-    }
+    },
   })
 }
 

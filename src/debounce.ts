@@ -5,6 +5,7 @@ const debounce = (opts: TransformOptions) =>
   (wait: WaitFn) => {
     let lastChunk: any
     let unsubscribe: any
+
     return new Transform({
       ...opts,
       transform (chunk, encoding, callback) {
@@ -20,7 +21,7 @@ const debounce = (opts: TransformOptions) =>
       flush (callback) {
         unsubscribe && unsubscribe()
         callback(undefined, lastChunk)
-      }
+      },
     })
   }
 

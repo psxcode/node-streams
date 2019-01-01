@@ -11,7 +11,7 @@ const map = (opts: TransformOptions) => <T, R> (xf: (value: T) => R) =>
         return callback(e)
       }
       callback(undefined, res)
-    }
+    },
   })
 
 export default map

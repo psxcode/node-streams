@@ -18,11 +18,11 @@ export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp 
         const shouldGoIn = item.timestamp - timestamp() + ms
         if (shouldGoIn <= 10) {
           this.push(item.data)
-          return consume.call(this)
+          consume.call(this)
         } else {
           timeout(() => {
             this.push(item.data)
-            return consume.call(this)
+            consume.call(this)
           }, shouldGoIn)
         }
       } else {
@@ -35,7 +35,7 @@ export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp 
       transform (chunk, encoding, callback) {
         buffer.push({
           timestamp: timestamp(),
-          data: chunk
+          data: chunk,
         })
         if (!inProgress) {
           consume.call(this)
@@ -44,7 +44,7 @@ export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp 
       },
       flush (callback) {
         endCallback = callback
-      }
+      },
     })
   }
 

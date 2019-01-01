@@ -6,7 +6,8 @@ import { UnsubFn } from './types'
 
 const combine = (opts: ReadableOptions) => (...streams: ReadableStream[]): ReadableStream => {
   let unsubscribe: UnsubFn
-  let latest = streams.map(() => undefined)
+  const latest = streams.map(() => undefined)
+
   return streams.length
     ? new Readable({
       ...opts,
@@ -21,14 +22,14 @@ const combine = (opts: ReadableOptions) => (...streams: ReadableStream[]): Reada
             complete: () => {
               this.push(null)
               this.destroy()
-            }
+            },
           })(...streams)
         }
       },
       destroy () {
         unsubscribe && unsubscribe()
         unsubscribe = undefined
-      }
+      },
     })
     : empty(opts)
 }

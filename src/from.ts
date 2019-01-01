@@ -4,6 +4,7 @@ import { iterate } from 'iterama'
 
 const from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
   const iterator = iterate(iterable)
+
   return new Readable({
     ...opts,
     read () {
@@ -14,7 +15,7 @@ const from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
       if (result.done) {
         this.push(null)
       }
-    }
+    },
   })
 }
 

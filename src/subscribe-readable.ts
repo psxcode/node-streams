@@ -18,12 +18,13 @@ const subscribeReadable = ({ next, error, complete = noop }: IObserver) =>
         }
       })(...streams),
       error ? on('error')(error)(...streams) : noop,
-      onceAll('end')(onComplete)(...streams)
+      onceAll('end')(onComplete)(...streams),
     ]
+
     return unsubscribe
 
     function unsubscribe () {
-      for (let u of unsub) u()
+      for (const u of unsub) u()
     }
   }
 

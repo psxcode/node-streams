@@ -5,6 +5,7 @@ const ofAsync = (opts: ReadableOptions) =>
   (wait: WaitFn) => <T> (...values: T[]) => {
     let i = 0
     let unsubscribe: UnsubFn
+
     return new Readable({
       ...opts,
       read () {
@@ -17,7 +18,7 @@ const ofAsync = (opts: ReadableOptions) =>
       },
       destroy () {
         unsubscribe && unsubscribe()
-      }
+      },
     })
   }
 

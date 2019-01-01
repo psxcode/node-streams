@@ -5,6 +5,7 @@ const throttle = (opts: TransformOptions) =>
   (wait: WaitFn) => {
     let lastChunk: any
     let unsubscribe: UnsubFn
+
     return new Transform({
       ...opts,
       transform (chunk, encoding, callback) {
@@ -21,7 +22,7 @@ const throttle = (opts: TransformOptions) =>
       flush (callback) {
         unsubscribe && unsubscribe()
         callback(undefined, lastChunk)
-      }
+      },
     })
   }
 
