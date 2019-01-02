@@ -14,3 +14,15 @@ export interface IObserverEx {
   error?: (err: EmitterValue) => void,
   complete?: () => void
 }
+
+export interface IAsyncObserver {
+  next: (chunk: any) => Promise<void>
+  error?: (err: Error) => void,
+  complete?: () => void
+}
+
+export interface IAsyncObserverEx {
+  next: (chunk: EmitterValue) => Promise<void>
+  error?: (err: EmitterValue) => void,
+  complete?: () => void
+}
