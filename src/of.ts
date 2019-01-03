@@ -1,4 +1,3 @@
-/* tslint:disable no-empty */
 import { Readable, ReadableOptions } from 'stream'
 
 const of = (opts: ReadableOptions) => <T> (...values: T[]) => {

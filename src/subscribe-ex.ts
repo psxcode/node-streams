@@ -1,4 +1,3 @@
-/* tslint:disable no-conditional-assignment */
 import { onceAll, onEx } from 'node-on'
 import ReadableStream = NodeJS.ReadableStream
 import noop from './noop'

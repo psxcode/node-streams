@@ -1,4 +1,3 @@
-/* tslint:disable no-conditional-assignment */
 import { Readable, ReadableOptions } from 'stream'
 import { iterate } from 'iterama'
 

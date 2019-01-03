@@ -1,4 +1,3 @@
-/* tslint:disable one-variable-per-declaration */
 import ReadWriteStream = NodeJS.ReadWriteStream
 
 const flatten = <T> (values: (T | T[])[]): T[] => {
