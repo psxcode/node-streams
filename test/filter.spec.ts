@@ -1,20 +1,29 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import filter from '../src/filter'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 const isEven = (value: number) => value % 2 === 0
 
 describe('[ filter ]', () => {
-  transformTest(
-    makeNumbers(8),
-    readable({ log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => filter({ objectMode: true })(isEven),
-    (data, spy) => {
-      expect(spy.data()).deep.eq(Array.from(data).filter(isEven))
-    }
-  )
+  it('should work', async () => {
+    const data = makeNumbers(8)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const t = filter({ objectMode: true })(isEven)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

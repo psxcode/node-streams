@@ -1,24 +1,38 @@
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { pipeline } from 'stream'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import buffer from '../src/buffer'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const consumerLog = debug('ns-consumer')
+const intervalLog = debug('ns-interval')
 
 const interval = (next: () => void) => {
-  console.log('subscribe')
+  intervalLog('subscribe')
   const id = setTimeout(next, 30)
 
   return () => {
-    console.log('clear')
+    intervalLog('clear')
     clearTimeout(id)
   }
 }
 
 describe('[ buffer ]', () => {
-  transformTest(
-    makeNumbers(4),
-    readable({ delayMs: 5, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => buffer({ objectMode: true })(interval)
-  )
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 5, log: readableLog })({ objectMode: true })(data)
+    const t = buffer({ objectMode: true })(interval)
+    const w = writable({ log: consumerLog })({ objectMode: true })(spy)
+    const pipe = pipeline(r, t, w)
+
+    await finished(pipe)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

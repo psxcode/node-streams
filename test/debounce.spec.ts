@@ -1,8 +1,15 @@
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { pipeline } from 'stream'
+import { describe, it } from 'mocha'
+import { expect } from 'chai'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import debounce from '../src/debounce'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 const interval = (next: () => void) => {
   console.log('subscribe')
@@ -15,10 +22,16 @@ const interval = (next: () => void) => {
 }
 
 describe('[debounce]', () => {
-  transformTest(
-    makeNumbers(4),
-    readable({ delayMs: 0, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => debounce({ objectMode: true })(interval)
-  )
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
+    const t = debounce({ objectMode: true })(interval)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

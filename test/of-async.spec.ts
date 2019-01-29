@@ -1,26 +1,35 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { dataConsumer, makeNumbers, readableTest } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import ofAsync from '../src/of-async'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const writableLog = debug('ns-writable')
+
+const interval = (next: () => void) => {
+  console.log('subscribe')
+  const id = setTimeout(next, 30)
+
+  return () => {
+    console.log('clear')
+    clearTimeout(id)
+  }
+}
 
 describe('[ ofAsync ]', () => {
-  const interval = (next: () => void) => {
-    console.log('subscribe')
-    const id = setTimeout(next, 30)
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = ofAsync({ objectMode: true })(interval)(...data)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, w)
 
-    return () => {
-      console.log('clear')
-      clearTimeout(id)
-    }
-  }
-  readableTest<number>(
-    makeNumbers(4),
-    (data) => ofAsync({ objectMode: true })(interval)(...data),
-    dataConsumer({ log }),
-    (data, spy) => {
-      expect(spy.data()).deep.eq(Array.from(data))
-    }
-  )
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

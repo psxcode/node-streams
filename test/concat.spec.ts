@@ -1,24 +1,29 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { dataConsumer, makeNumbers, readable, readableTest } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { readable, pushConsumer, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import concat from '../src/concat'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
 let i = 0
-const prodLog = () => debug(`prod${i++}`)
-const consLog = debug('cons')
+const readableLog = () => debug(`ns-readable${i++}`)
+const consumerLog = debug('ns-consumer')
 
 describe('[ concat ]', () => {
-  readableTest(
-    makeNumbers(4),
-    (data) => {
-      const s1 = readable({ delayMs: 50, log: prodLog() })({ objectMode: true })(data)
-      const s2 = readable({ delayMs: 10, log: prodLog() })({ objectMode: true })(data)
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const s1 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: true, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const r = concat({ objectMode: true })(s1, s2)
+    const w = writable({ log: consumerLog })({ objectMode: true })(spy)
+    const p = pipeline(r, w)
 
-      return concat({ objectMode: true })(s1, s2)
-    },
-    dataConsumer({ log: consLog }),
-    (data, spy) => {
-      expect(spy.data()).deep.eq([0, 1, 2, 3, 4, 0, 1, 2, 3, 4])
-    }
-  )
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

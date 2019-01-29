@@ -1,18 +1,27 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
+import { describe, it } from 'mocha'
 import debug from 'debug'
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { readable, writable } from 'node-stream-test'
+import { createSpy, getSpyCalls } from 'spyfn'
 import { delayRaw } from '../src/delay'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 describe('[ delay ]', () => {
-  transformTest<number>(
-    makeNumbers(8),
-    readable({ delayMs: 30, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => delayRaw()({ objectMode: true })(1000),
-    (data, spy) => {
-      expect(spy.data()).deep.eq(Array.from(data))
-    }
-  )
+  it('should work', async () => {
+    const data = makeNumbers(8)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 30, log: readableLog })({ objectMode: true })(data)
+    const t = delayRaw()({ objectMode: true })(1000)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

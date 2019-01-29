@@ -1,8 +1,15 @@
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { pipeline } from 'stream'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import throttle from '../src/throttle'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 const interval = (next: () => void) => {
   console.log('subscribe')
@@ -14,11 +21,17 @@ const interval = (next: () => void) => {
   }
 }
 
-describe('[throttle]', () => {
-  transformTest<number>(
-    makeNumbers(8),
-    readable({ delayMs: 0, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => throttle({ objectMode: true })(interval)
-  )
+describe('[ throttle ]', () => {
+  it('shoudl work', async () => {
+    const data = makeNumbers(8)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
+    const t = throttle({ objectMode: true })(interval)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

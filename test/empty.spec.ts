@@ -1,17 +1,23 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { dataConsumer, makeStrings, readableTest } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import empty from '../src/empty'
+import finished from './stream-finished'
 
-const log = debug('consumer')
+const log = debug('ns-writable')
 
 describe('[ empty ]', () => {
-  readableTest(
-    makeStrings(4),
-    () => empty({ objectMode: true }),
-    dataConsumer({ log }),
-    (data, spy) => {
-      expect(spy.callCount()).eq(0)
-    }
-  )
+  it('should work', async () => {
+    const spy = createSpy(() => {})
+    const r = empty({ objectMode: true })
+    const w = writable({ log })({ objectMode: true })(spy)
+    const p = pipeline(r, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

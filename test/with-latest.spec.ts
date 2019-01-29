@@ -1,30 +1,30 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import {
-  dataConsumer,
-  makeNumbers,
-  readable,
-  readableTest,
-} from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import withLatest from '../src/with-latest'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
 let i = 0
-const prodLog = () => debug(`prod${i++}`)
-const consLog = debug('cons')
+const readableLog = () => debug(`ns-readable${i++}`)
+const writableLog = debug('ns-writable')
 
 describe('[ withLatest ]', () => {
-  readableTest(
-    makeNumbers(8),
-    (data) => {
-      const s1 = readable({ delayMs: 5, log: prodLog() })({ objectMode: true })(data)
-      const s2 = readable({ delayMs: 10, log: prodLog() })({ objectMode: true })(data)
-      const s3 = readable({ delayMs: 50, eager: true, log: prodLog() })({ objectMode: true })(data)
+  it('should work', async () => {
+    const data = makeNumbers(8)
+    const spy = createSpy(() => {})
+    const s1 = readable({ eager: true, delayMs: 5, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: true, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const s3 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)
+    const r = withLatest({ objectMode: true })(s2, s3)(s1)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, w)
 
-      return withLatest({ objectMode: true })(s2, s3)(s1)
-    },
-    dataConsumer({ log: consLog }),
-    (data, spy) => {
-      expect(spy.data().length).eq(Array.from(data).length)
-    }
-  )
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

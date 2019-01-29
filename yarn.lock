@@ -1858,10 +1858,10 @@ node-releases@^1.1.1:
   dependencies:
     semver "^5.3.0"
 
-node-stream-test@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.0.tgz#88fc8fe301cb61221f187ed7bf9260b637b3195c"
-  integrity sha512-+mHJzanVdeVKJaPU5Ovuf2bVoVatZ+rJPcsfcJRwm8F2lYU3YsXRU5azg10Sjba3BDimR6WPDzSWDw/v5svGAw==
+node-stream-test@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.1.tgz#918eeca4960a4767eda29b481dd63c274ab2f6d1"
+  integrity sha512-1+lbfvoQeRdtTWzl0QIeawiSROR0ZNGSggum8pLeuQYYJtkaGr4fQewX/G7fwQ5ifREQcB3gvOkx18OtLZnQMw==
   dependencies:
     "@psxcode/wait" "^0.1.1"
     iterama "^0.1.0"

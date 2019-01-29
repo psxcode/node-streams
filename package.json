@@ -38,7 +38,7 @@
     "eslint-plugin-typescript": "^1.0.0-0",
     "esm": "^3.1.4",
     "mocha": "^5.2.0",
-    "node-stream-test": "^0.3.0",
+    "node-stream-test": "^0.3.1",
     "nyc": "^13.1.0",
     "rimraf": "^2.6.3",
     "spyfn": "^0.1.1",

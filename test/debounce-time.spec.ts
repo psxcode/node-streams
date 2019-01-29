@@ -1,14 +1,27 @@
-import { makeNumbers, readable, transformTest, writable } from 'node-stream-test'
+import { pipeline } from 'stream'
+import { expect } from 'chai'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import debounceTime from '../src/debounce-time'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 describe('[debounceTime]', () => {
-  transformTest(
-    makeNumbers(4),
-    readable({ delayMs: 0, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => debounceTime({ objectMode: true })(30)
-  )
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
+    const t = debounceTime({ objectMode: true })(30)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

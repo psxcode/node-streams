@@ -1,20 +1,27 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { readable, transformTest, writable } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import distinct from '../src/distinct'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
+const isEqual = <T> (a: T, b: T) => a === b
 
 describe('[ distinct ]', () => {
-  const isEqual = <T> (a: T, b: T) => a === b
+  it('should work', async () => {
+    const data = [0, 1, 2, 2, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 9]
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, delayMs: 30, log: readableLog })({ objectMode: true })(data)
+    const t = distinct({ objectMode: true })(isEqual)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, t, w)
 
-  transformTest<number>(
-    [0, 1, 2, 2, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 9],
-    readable({ delayMs: 30, log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => distinct({ objectMode: true })(isEqual),
-    (data, spy) => {
-      expect(spy.data()).deep.eq([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-    }
-  )
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

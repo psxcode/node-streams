@@ -1,17 +1,25 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { dataConsumer, makeNumbers, readableTest } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import of from '../src/of'
+import makeNumbers from './make-numbers'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const writableLog = debug('ns-writable')
 
 describe('[ of ]', () => {
-  readableTest<number>(
-    makeNumbers(4),
-    (data) => of({ objectMode: true })(...data),
-    dataConsumer({ log }),
-    (data, spy) => {
-      expect(spy.data()).deep.eq(Array.from(data))
-    }
-  )
+  it('should work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = of({ objectMode: true })(...data)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = pipeline(r, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })

@@ -1,30 +1,43 @@
+import { pipeline } from 'stream'
 import { expect } from 'chai'
-import { makeNumbers, makeStrings, readable, transformTest, writable } from 'node-stream-test'
+import { describe, it } from 'mocha'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
+import { createSpy, getSpyCalls } from 'spyfn'
 import side from '../src/side'
+import makeNumbers from './make-numbers'
+import makeStrings from './make-strings'
+import finished from './stream-finished'
 
-const log = debug('producer')
+const readableLog = debug('ns-readable')
+const writableLog = debug('ns-writable')
 
 const multiply = (multiplier: number) => (value: number) => value * multiplier
 
 describe('[ side ]', () => {
-  transformTest<string>(
-    makeStrings(8),
-    readable({ log })({ encoding: 'utf8' }),
-    writable({})({ decodeStrings: false }),
-    () => side({ objectMode: true })((x) => x),
-    (data, spy) => {
-      expect(spy.callCount()).eq(Array.from(data).length)
-    }
-  )
+  it('shoudl work', async () => {
+    const data = makeStrings(8)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
+    const t = side({ objectMode: true })((x) => x)
+    const w = writable({ log: writableLog })({ decodeStrings: false })(spy)
+    const p = pipeline(r, t, w)
 
-  transformTest<number>(
-    makeNumbers(4),
-    readable({ log })({ objectMode: true }),
-    writable({})({ objectMode: true }),
-    () => side({ objectMode: true })(multiply(2)),
-    (data, spy) => {
-      expect(spy.data()).deep.eq(Array.from(data))
-    }
-  )
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
+
+  it('shoudl work', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
+    const t = side({ objectMode: true })(multiply(2))
+    const w = writable({ log: writableLog })({ decodeStrings: false })(spy)
+    const p = pipeline(r, t, w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([])
+  })
 })
