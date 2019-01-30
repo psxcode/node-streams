@@ -1,11 +1,10 @@
-import ReadableStream = NodeJS.ReadableStream
 import { Readable, ReadableOptions } from 'stream'
 import subscribe from './subscribe'
 import subscribeEx from './subscribe-ex'
 import empty from './empty'
 
 const withLatest = (opts: ReadableOptions) =>
-  (...streams: ReadableStream[]) => (main: ReadableStream): ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]) => (main: NodeJS.ReadableStream): NodeJS.ReadableStream => {
     let unsubscribeMain: (() => void) | undefined
     let unsubscribeRest: (() => void) | undefined
     const latest = new Array(streams.length)

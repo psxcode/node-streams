@@ -1,4 +1,3 @@
-import ReadableStream = NodeJS.ReadableStream
 import { Readable, ReadableOptions } from 'stream'
 import { onEx } from 'node-on'
 import subscribeEx from './subscribe-ex'
@@ -6,7 +5,7 @@ import empty from './empty'
 import { UnsubFn } from './types'
 
 const zip = (opts: ReadableOptions) =>
-  (...streams: ReadableStream[]): ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
     let unsubscribe: UnsubFn
     let unsubscribeEnd: UnsubFn
     const latest: any[][] = streams.map(() => [])

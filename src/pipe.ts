@@ -1,5 +1,3 @@
-import ReadWriteStream = NodeJS.ReadWriteStream
-
 const flatten = <T> (values: (T | T[])[]): T[] => {
   const res: T[] = []
   for (const v of values) {
@@ -9,7 +7,7 @@ const flatten = <T> (values: (T | T[])[]): T[] => {
   return res
 }
 
-const pipe = (...streams: (ReadWriteStream | ReadWriteStream[])[]): ReadWriteStream[] => {
+function pipe (...streams: (NodeJS.ReadWriteStream | NodeJS.ReadWriteStream[])[]): NodeJS.ReadWriteStream[] {
   const fls = flatten(streams)
   for (let i = 1, l = fls.length; i < l; ++i) {
     fls[i - 1].unpipe().pipe(fls[i])

@@ -1,11 +1,10 @@
 import { Readable, ReadableOptions } from 'stream'
-import ReadableStream = NodeJS.ReadableStream
 import empty from './empty'
 import subscribe from './subscribe'
 import { UnsubFn } from './types'
 
 const concat = (opts: ReadableOptions) =>
-  (...streams: ReadableStream[]): ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
     let unsubscribe: UnsubFn
     let index = 0
 

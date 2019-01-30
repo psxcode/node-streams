@@ -1,10 +1,9 @@
 import { onceAll, onEx } from 'node-on'
-import ReadableStream = NodeJS.ReadableStream
 import noop from './noop'
 import { IObserverEx } from './types'
 
 const subscribeEx = ({ next, error, complete = noop }: IObserverEx) =>
-  (...streams: ReadableStream[]) => {
+  (...streams: NodeJS.ReadableStream[]) => {
     const onComplete = () => {
       unsubscribe()
       complete()

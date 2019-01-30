@@ -1,11 +1,10 @@
-import ReadableStream = NodeJS.ReadableStream
 import { on, onceAll, onEx } from 'node-on'
 import noop from './noop'
 import { IAsyncObserverEx } from './types'
 
 const subscribeExAsync = ({ next, error, complete = noop }: IAsyncObserverEx) =>
-  (...streams: ReadableStream[]) => {
-    const readables: (ReadableStream | undefined)[] = streams.map(() => undefined)
+  (...streams: NodeJS.ReadableStream[]) => {
+    const readables: (NodeJS.ReadableStream | undefined)[] = streams.map(() => undefined)
     const readablesDataIndex = streams.map(() => 0)
     let readableIndex = 0
     let promise: Promise<void> | undefined = undefined
@@ -38,7 +37,7 @@ const subscribeExAsync = ({ next, error, complete = noop }: IAsyncObserverEx) =>
     }
     const unsub = [
       onEx('readable')(({ emitter, emitterIndex }) => {
-        readables[emitterIndex] = emitter as ReadableStream
+        readables[emitterIndex] = emitter as NodeJS.ReadableStream
         consume()
       })(...streams),
       error ? on('error')(error)(...streams) : noop,
