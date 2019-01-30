@@ -1,7 +1,7 @@
 import { Readable, ReadableOptions } from 'stream'
 import { iterate } from 'iterama'
 
-const from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
+const _from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
   const iterator = iterate(iterable)
 
   return new Readable({
@@ -18,4 +18,4 @@ const from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
   })
 }
 
-export default from
+export default _from
