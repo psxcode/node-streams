@@ -8,16 +8,13 @@ import buffer from '../src/buffer'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('ns-readable')
-const consumerLog = debug('ns-consumer')
-const intervalLog = debug('ns-interval')
+const readableLog = debug('node-streams:readable')
+const consumerLog = debug('node-streams:consumer')
 
-const interval = (next: () => void) => {
-  intervalLog('subscribe')
-  const id = setTimeout(next, 30)
+const interval = (ms: number) => (next: () => void) => {
+  const id = setTimeout(next, ms)
 
   return () => {
-    intervalLog('clear')
     clearTimeout(id)
   }
 }
@@ -26,13 +23,31 @@ describe('[ buffer ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
     const spy = createSpy(() => {})
-    const r = readable({ eager: true, delayMs: 5, log: readableLog })({ objectMode: true })(data)
-    const t = buffer({ objectMode: true })(interval)
+    const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
+    const t = buffer({ objectMode: true })(interval(15))
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const pipe = pipeline(r, t, w)
+    const p = r.pipe(t).pipe(w)
 
-    await finished(pipe)
+    await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [[0, 1]],
+      [[2, 3]],
+    ])
+  })
+
+  it('use transform \'flush\' function', async () => {
+    const data = makeNumbers(4)
+    const spy = createSpy(() => {})
+    const r = readable({ eager: false, delayMs: 5, log: readableLog })({ objectMode: true })(data)
+    const t = buffer({ objectMode: true })(interval(30))
+    const w = writable({ log: consumerLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(getSpyCalls(spy)).deep.eq([
+      [[0, 1, 2, 3]],
+    ])
   })
 })

@@ -8,8 +8,8 @@ import filter from '../src/filter'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('ns-readable')
-const writableLog = debug('ns-writable')
+const readableLog = debug('node-streams:readable')
+const writableLog = debug('node-streams:writable')
 
 const isEven = (value: number) => value % 2 === 0
 

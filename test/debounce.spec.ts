@@ -8,8 +8,8 @@ import debounce from '../src/debounce'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('ns-readable')
-const writableLog = debug('ns-writable')
+const readableLog = debug('node-streams:readable')
+const writableLog = debug('node-streams:writable')
 
 const interval = (next: () => void) => {
   console.log('subscribe')

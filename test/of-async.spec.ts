@@ -8,7 +8,7 @@ import ofAsync from '../src/of-async'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const writableLog = debug('ns-writable')
+const writableLog = debug('node-streams:writable')
 
 const interval = (next: () => void) => {
   console.log('subscribe')

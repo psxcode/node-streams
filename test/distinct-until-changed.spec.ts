@@ -7,8 +7,8 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import distinctUntilChanged from '../src/distinct-until-changed'
 import finished from './stream-finished'
 
-const readableLog = debug('ns-readable')
-const writableLog = debug('ns-writable')
+const readableLog = debug('node-streams:readable')
+const writableLog = debug('node-streams:writable')
 
 describe('[ distinct ]', () => {
   it('should work', async () => {

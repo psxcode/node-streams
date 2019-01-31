@@ -9,8 +9,8 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
 let i = 0
-const readableLog = () => debug(`ns-readable${i++}`)
-const writableLog = debug('ns-writable')
+const readableLog = () => debug(`node-streams:readable:${i++}`)
+const writableLog = debug('node-streams:writable')
 
 describe('[ withLatest ]', () => {
   it('should work', async () => {

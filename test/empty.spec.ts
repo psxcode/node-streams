@@ -7,7 +7,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import empty from '../src/empty'
 import finished from './stream-finished'
 
-const log = debug('ns-writable')
+const log = debug('node-streams:writable')
 
 describe('[ empty ]', () => {
   it('should work', async () => {
