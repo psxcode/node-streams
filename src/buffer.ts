@@ -21,7 +21,7 @@ const buffer = (opts: TransformOptions) =>
       },
       flush (callback) {
         unsubscribe && unsubscribe()
-        callback(undefined, buf)
+        callback(undefined, buf.length ? buf : undefined)
       },
     })
   }
