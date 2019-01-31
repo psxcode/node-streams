@@ -653,10 +653,10 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.5.tgz#8a4accfc403c124a0bafe8a9fc61a05ec1032073"
   integrity sha512-lAVp+Kj54ui/vLUFxsJTMtWvZraZxum3w3Nwkble2dNuV5VnPA+Mi2oGX9XYJAaIvZi3tn3cbjS/qcJXRb6Bww==
 
-"@types/node@^10.12.19":
-  version "10.12.19"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.19.tgz#ca1018c26be01f07e66ac7fefbeb6407e4490c61"
-  integrity sha512-2NVovndCjJQj6fUUn9jCgpP4WSqr+u1SoUZMZyJkhGeBFsm6dE46l31S7lPUYt9uQ28XI+ibrJA1f5XyH5HNtA==
+"@types/node@^10.12.20":
+  version "10.12.20"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.20.tgz#f79f959acd3422d0889bd1ead1664bd2d17cd367"
+  integrity sha512-9spv6SklidqxevvZyOUGjZVz4QRXGu2dNaLyXIFzFYZW0AGDykzPRIUFJXTlQXyfzAucddwTcGtJNim8zqSOPA==
 
 acorn-jsx@^5.0.0:
   version "5.0.1"
@@ -1176,10 +1176,10 @@ eslint@^5.12.1:
     table "^5.0.2"
     text-table "^0.2.0"
 
-esm@^3.1.4:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.1.4.tgz#d75f7c1b16e5be57e0446c267d8c0fda9566983d"
-  integrity sha512-GScwIz0110RTNzBmAQEdqaAYkD9zVhj2Jo+jeizjIcdyTw+C6S0Zv/dlPYgfF41hRTu2f1vQYliubzIkusx2gA==
+esm@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/esm/-/esm-3.2.0.tgz#089011156cf817ccdae38c877cbe03301df04136"
+  integrity sha512-yK4IiHmmInOk9q4xbJXdUfPV0ju7GbRCbhtpe5/gH7nRiD6RAb12Ix7zfsqQkDL5WERwzFlq/eT6zTXDWwIk+w==
 
 espree@^5.0.0:
   version "5.0.0"
@@ -1858,10 +1858,10 @@ node-releases@^1.1.1:
   dependencies:
     semver "^5.3.0"
 
-node-stream-test@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.1.tgz#918eeca4960a4767eda29b481dd63c274ab2f6d1"
-  integrity sha512-1+lbfvoQeRdtTWzl0QIeawiSROR0ZNGSggum8pLeuQYYJtkaGr4fQewX/G7fwQ5ifREQcB3gvOkx18OtLZnQMw==
+node-stream-test@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.2.tgz#5d845b154234d59d3a6ecda6f9a4fae789d117c9"
+  integrity sha512-obMFxZwx+YRwDChIVzh5g9EZSkumBi8PqRSpcQ3HnV3rxCFsFtXJBODtg1K4jUB2liDcfzEtzSGuCZSKvo3KvQ==
   dependencies:
     "@psxcode/wait" "^0.1.1"
     iterama "^0.1.0"
@@ -2595,10 +2595,10 @@ typescript-estree@5.3.0:
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
-typescript@^3.2.4:
-  version "3.2.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.2.4.tgz#c585cb952912263d915b462726ce244ba510ef3d"
-  integrity sha512-0RNDbSdEokBeEAkgNbxJ+BLwSManFy9TeXz8uW+48j/xhEXv1ePME60olyzw2XzUqUBNAYFeJadIqAgNqIACwg==
+typescript@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.3.1.tgz#6de14e1db4b8a006ac535e482c8ba018c55f750b"
+  integrity sha512-cTmIDFW7O0IHbn1DPYjkiebHxwtCMU+eTy30ZtJNBPF9j2O1ITu5XH2YnBeVRKWHqF+3JQwWJv0Q0aUgX8W7IA==
 
 uglify-js@^3.1.4:
   version "3.4.9"
