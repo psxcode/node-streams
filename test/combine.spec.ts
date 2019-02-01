@@ -8,8 +8,8 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
 let i = 0
-const readableLog = () => debug(`node-streams:readable:${i++}`)
-const writableLog = debug('node-streams:writable')
+const readableLog = () => debug(`ns:readable:${i++}`)
+const writableLog = debug('ns:writable')
 
 describe('[ combine ]', () => {
   it('lazy readables', async () => {
@@ -37,7 +37,7 @@ describe('[ combine ]', () => {
     ])
   })
 
-  it.only('readable emits error', async () => {
+  it('readable emits error', async () => {
     const data = makeNumbers(2)
     const spy = createSpy(() => {})
     const s1 = readable({ eager: false, delayMs: 0, log: readableLog(), errorAtStep: 1 })({ objectMode: true })(data)
@@ -46,7 +46,8 @@ describe('[ combine ]', () => {
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(w)
 
-    // r.on('error', () => {})
+    /* error is not propagated by pipe */
+    r.on('error', () => {})
 
     await finished(p)
 

@@ -7,8 +7,8 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import distinct from '../src/distinct'
 import finished from './stream-finished'
 
-const readableLog = debug('node-streams:readable')
-const writableLog = debug('node-streams:writable')
+const readableLog = debug('ns:readable')
+const writableLog = debug('ns:writable')
 const isEqual = <T> (a: T, b: T) => a === b
 
 describe('[ distinct ]', () => {

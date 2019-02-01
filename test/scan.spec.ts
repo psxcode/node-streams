@@ -8,8 +8,8 @@ import scan from '../src/scan'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('node-streams:readable')
-const writableLog = debug('node-streams:writable')
+const readableLog = debug('ns:readable')
+const writableLog = debug('ns:writable')
 
 const addAll = (acc = 0, value: number) => acc + value
 

@@ -8,8 +8,8 @@ import take from '../src/take'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('node-streams:readable')
-const writableLog = debug('node-streams:writable')
+const readableLog = debug('ns:readable')
+const writableLog = debug('ns:writable')
 
 describe.skip('[ take ]', () => {
   it('should work', async () => {

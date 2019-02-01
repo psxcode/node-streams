@@ -8,8 +8,8 @@ import buffer from '../src/buffer'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const readableLog = debug('node-streams:readable')
-const consumerLog = debug('node-streams:consumer')
+const readableLog = debug('ns:readable')
+const consumerLog = debug('ns:consumer')
 
 const interval = (ms: number) => (next: () => void) => {
   const id = setTimeout(next, ms)

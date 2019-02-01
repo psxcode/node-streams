@@ -9,8 +9,8 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 import interval from './interval'
 
-const readableLog = debug('node-streams:readable')
-const writableLog = debug('node-streams:writable')
+const readableLog = debug('ns:readable')
+const writableLog = debug('ns:writable')
 
 describe('[debounce]', () => {
   it('should work', async () => {

@@ -9,7 +9,7 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 import interval from './interval'
 
-const writableLog = debug('node-streams:writable')
+const writableLog = debug('ns:writable')
 
 describe('[ ofAsync ]', () => {
   it('should work', async () => {

@@ -8,8 +8,8 @@ import merge from '../src/merge'
 import finished from './stream-finished'
 
 let i = 0
-const readableLog = () => debug(`node-streams:readable:${i++}`)
-const writableLog = debug('node-streams:writable')
+const readableLog = () => debug(`ns:readable:${i++}`)
+const writableLog = debug('ns:writable')
 
 describe('[ merge ]', () => {
   it('should work', async () => {

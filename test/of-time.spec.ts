@@ -8,7 +8,7 @@ import ofTime from '../src/of-time'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
-const writableLog = debug('node-streams:writable')
+const writableLog = debug('ns:writable')
 
 describe('[ ofTime ]', () => {
   it('should work', async () => {

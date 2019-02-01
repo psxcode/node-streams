@@ -9,8 +9,8 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
 let i = 0
-const readableLog = () => debug(`node-streams:readable:${i++}`)
-const consumerLog = debug('node-streams:consumer')
+const readableLog = () => debug(`ns:readable:${i++}`)
+const consumerLog = debug('ns:consumer')
 
 describe('[ concat ]', () => {
   it('should work', async () => {

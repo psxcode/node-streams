@@ -9,7 +9,7 @@ import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 
 let i = 0
-const readableLog = () => debug(`node-streams:readable:${i++}`)
+const readableLog = () => debug(`ns:readable:${i++}`)
 
 describe('[ subscribe ]', () => {
   it('should work with single stream', async () => {
