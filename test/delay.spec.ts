@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import debug from 'debug'
@@ -18,7 +17,7 @@ describe('[ delay ]', () => {
     const r = readable({ eager: true, delayMs: 30, log: readableLog })({ objectMode: true })(data)
     const t = delayRaw()({ objectMode: true })(1000)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = pipeline(r, t, w)
+    const p = r.pipe(t).pipe(w)
 
     await finished(p)
 

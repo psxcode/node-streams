@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'

@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -18,7 +17,7 @@ describe('[ skip ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = skip({ objectMode: true })(5)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = pipeline(r, t, w)
+    const p = r.pipe(t).pipe(w)
 
     await finished(p)
 

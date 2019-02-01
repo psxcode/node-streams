@@ -1,7 +1,6 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
-import { readable, pushConsumer, writable } from 'node-stream-test'
+import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
 import { createSpy, getSpyCalls } from 'spyfn'
 import concat from '../src/concat'
@@ -20,7 +19,7 @@ describe('[ concat ]', () => {
     const s2 = readable({ eager: true, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1, s2)
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const p = pipeline(r, w)
+    const p = r.pipe(w)
 
     await finished(p)
 

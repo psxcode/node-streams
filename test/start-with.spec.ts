@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -19,7 +18,7 @@ describe('[ concat ]', () => {
     const s1 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)
     const r = startWith({ objectMode: true })(0, 1, 2, 3, 4)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = pipeline(r, w)
+    const p = r.pipe(w)
 
     await finished(p)
 

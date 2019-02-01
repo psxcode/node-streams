@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -22,13 +21,9 @@ describe('[ first ]', () => {
     const spy = createSpy(() => {})
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const pipe = pipeline(
-      r,
-      first({ objectMode: true }),
-      w
-    )
+    const p = r.pipe(first({ objectMode: true })).pipe(w)
 
-    await finished(pipe)
+    await finished(p)
 
     expect(getSpyCalls(spy)).deep.eq([])
   })
@@ -38,13 +33,11 @@ describe('[ first ]', () => {
     const spy = createSpy(() => {})
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = pipeline(
-      r,
-      filter({ objectMode: true })(isEqual(10)),
-      first({ objectMode: true }),
-      map({ objectMode: true })(multiply(2)),
-      w
-    )
+    const p = r
+      .pipe(filter({ objectMode: true })(isEqual(10)))
+      .pipe(first({ objectMode: true }))
+      .pipe(map({ objectMode: true })(multiply(2)))
+      .pipe(w)
 
     await finished(p)
 

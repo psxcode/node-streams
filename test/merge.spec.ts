@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -19,7 +18,7 @@ describe('[ merge ]', () => {
     const s2 = readable({ eager: true, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const r = merge({ objectMode: true })(s1, s2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = pipeline(r, w)
+    const p = r.pipe(w)
 
     await finished(p)
 

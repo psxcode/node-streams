@@ -1,4 +1,3 @@
-import { pipeline } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -22,7 +21,7 @@ describe('[ map ]', () => {
     const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
     const w = writable({ log: writableLog })({ decodeStrings: false })(spy)
     const t = map({ objectMode: true })(identity)
-    const p = pipeline(r, t, w)
+    const p = r.pipe(t).pipe(w)
 
     await finished(p)
 
@@ -35,7 +34,7 @@ describe('[ map ]', () => {
     const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
     const w = writable({ log: writableLog })({ decodeStrings: false })(spy)
     const t = map({ objectMode: true })(multiply(2))
-    const p = pipeline(r, t, w)
+    const p = r.pipe(t).pipe(w)
 
     await finished(p)
 
