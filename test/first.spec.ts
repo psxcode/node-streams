@@ -8,6 +8,7 @@ import first from '../src/first'
 import map from '../src/map'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -19,28 +20,37 @@ describe('[ first ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
     const spy = createSpy(() => {})
-    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(first({ objectMode: true })).pipe(w)
 
-    await finished(p)
+    /* wait for readable */
+    await finished(r)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [0],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 
   it('should work', async () => {
     const data = makeNumbers(8)
     const spy = createSpy(() => {})
-    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r
-      .pipe(filter({ objectMode: true })(isEqual(10)))
+      .pipe(filter({ objectMode: true })(isEqual(5)))
       .pipe(first({ objectMode: true }))
       .pipe(map({ objectMode: true })(multiply(2)))
       .pipe(w)
 
-    await finished(p)
+    await finished(r)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [10],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

@@ -7,6 +7,7 @@ import throttle from '../src/throttle'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 import interval from './interval'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -23,5 +24,8 @@ describe('[ throttle ]', () => {
     await finished(p)
 
     expect(getSpyCalls(spy)).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

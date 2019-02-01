@@ -8,6 +8,7 @@ import last from '../src/last'
 import map from '../src/map'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -22,13 +23,16 @@ describe('[ last ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r
-      .pipe(filter({ objectMode: true })(isEqual(10)))
       .pipe(last({ objectMode: true }))
       .pipe(map({ objectMode: true })(multiply(2)))
       .pipe(w)
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [6],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

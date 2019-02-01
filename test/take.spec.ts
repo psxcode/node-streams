@@ -6,11 +6,12 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import take from '../src/take'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
-describe.skip('[ take ]', () => {
+describe('[ take ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
     const spy = createSpy(() => {})
@@ -22,5 +23,8 @@ describe.skip('[ take ]', () => {
     await finished(p)
 
     expect(getSpyCalls(spy)).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

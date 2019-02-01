@@ -6,6 +6,7 @@ import debug from 'debug'
 import subscribeEx from '../src/subscribe-ex'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
@@ -20,6 +21,7 @@ describe('[ subscribeEx ]', () => {
     await finished(s1)
 
     expect(getSpyCalls(spy)).deep.eq([])
+    expect(numEvents(s1)).eq(0)
   })
 
   it('should work with multiple streams', async () => {
@@ -36,6 +38,8 @@ describe('[ subscribeEx ]', () => {
     ])
 
     expect(getSpyCalls(spy)).eq([])
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(s2)).eq(0)
   })
 
   xit('should work with complete', async () => {
@@ -54,6 +58,8 @@ describe('[ subscribeEx ]', () => {
 
     expect(getSpyCalls(spy)).deep.eq([])
     expect(getSpyCalls(completeSpy)).deep.eq([[]])
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(s2)).eq(0)
   })
 
   it('should work with unsubscribe', async () => {
@@ -69,5 +75,6 @@ describe('[ subscribeEx ]', () => {
 
     expect(getSpyCalls(spy)).deep.eq([])
     expect(getSpyCalls(completeSpy)).deep.eq([[]])
+    expect(numEvents(s1)).eq(0)
   })
 })

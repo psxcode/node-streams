@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import reduce from '../src/reduce'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -14,7 +15,7 @@ const addAll = (acc = 0, value: number) => acc + value
 
 describe('[ reduce ]', () => {
   it('should work', async () => {
-    const data = makeNumbers(8)
+    const data = makeNumbers(3)
     const spy = createSpy(() => {})
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(addAll)
@@ -23,6 +24,11 @@ describe('[ reduce ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [3],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

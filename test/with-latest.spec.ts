@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import withLatest from '../src/with-latest'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
@@ -25,5 +26,10 @@ describe('[ withLatest ]', () => {
     await finished(p)
 
     expect(getSpyCalls(spy)).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(s2)).eq(0)
+    expect(numEvents(s3)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

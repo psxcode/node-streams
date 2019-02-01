@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import bufferTime from '../src/buffer-time'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -25,6 +26,9 @@ describe('[ bufferTime ]', () => {
       [[0, 1]],
       [[2, 3]],
     ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 
   it('use transform \'flush\' function', async () => {
@@ -40,5 +44,8 @@ describe('[ bufferTime ]', () => {
     expect(getSpyCalls(spy)).deep.eq([
       [[0, 1, 2, 3]],
     ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

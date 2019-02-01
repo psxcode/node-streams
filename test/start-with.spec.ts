@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import startWith from '../src/start-with'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
@@ -13,15 +14,20 @@ const writableLog = debug('ns:writable')
 
 describe('[ concat ]', () => {
   it('should work', async () => {
-    const data = [5, 6, 7, 8, 9]
+    const data = [3, 4]
     const spy = createSpy(() => {})
     const s1 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)
-    const r = startWith({ objectMode: true })(0, 1, 2, 3, 4)(s1)
+    const r = startWith({ objectMode: true })(0, 1, 2)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(w)
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [0], [1], [2], [3], [4],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

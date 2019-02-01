@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import debounceTime from '../src/debounce-time'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -21,6 +22,11 @@ describe('[debounceTime]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [3],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

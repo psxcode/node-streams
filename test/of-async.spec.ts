@@ -7,6 +7,7 @@ import ofAsync from '../src/of-async'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 import interval from './interval'
+import numEvents from './num-events'
 
 const writableLog = debug('ns:writable')
 
@@ -20,6 +21,10 @@ describe('[ ofAsync ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [0], [1], [2], [3],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import combine from '../src/combine'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
@@ -35,6 +36,11 @@ describe('[ combine ]', () => {
       [[1, 2, 2]],
       [[2, 2, 2]],
     ])
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(s2)).eq(0)
+    expect(numEvents(s3)).eq(0)
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 
   it('readable emits error', async () => {
@@ -56,6 +62,10 @@ describe('[ combine ]', () => {
       [[0, 0]],
       [[0, 1]],
     ])
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(s2)).eq(0)
+    expect(numEvents(r)).eq(1)
+    expect(numEvents(w)).eq(0)
   })
 
   it('no readables', async () => {
@@ -67,5 +77,7 @@ describe('[ combine ]', () => {
     await finished(p)
 
     expect(getSpyCalls(spy)).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

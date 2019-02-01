@@ -6,6 +6,7 @@ import { createSpy, getSpyCalls } from 'spyfn'
 import filter from '../src/filter'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
@@ -16,13 +17,21 @@ describe('[ filter ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
     const spy = createSpy(() => {})
-    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(isEven)
     const p = r.pipe(t).pipe(w)
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(getSpyCalls(spy)).deep.eq([
+      [0],
+      [2],
+      [4],
+      [6],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
   })
 })

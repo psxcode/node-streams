@@ -9,6 +9,7 @@ import map from '../src/map'
 import first from '../src/first'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
+import numEvents from './num-events'
 
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
