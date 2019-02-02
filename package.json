@@ -33,6 +33,7 @@
     "@types/node": "^10.12.21",
     "babel-plugin-istanbul": "^5.1.0",
     "chai": "^4.2.0",
+    "circularr": "^0.1.2",
     "debug": "^4.1.1",
     "eslint": "^5.13.0",
     "eslint-plugin-import": "^2.16.0",
