@@ -14,7 +14,7 @@ const writableLog = debug('ns:writable')
 describe('[ skip ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = skip({ objectMode: true })(2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

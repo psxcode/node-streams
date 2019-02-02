@@ -11,7 +11,7 @@ const log = debug('ns:writable')
 
 describe('[ empty ]', () => {
   it('should work', async () => {
-    const spy = fn(() => {})
+    const spy = fn()
     const r = empty({ objectMode: true })
     const w = writable({ log })({ objectMode: true })(spy)
     const p = r.pipe(w)

@@ -15,7 +15,7 @@ const writableLog = debug('ns:writable')
 describe('[ withLatest ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: true, delayMs: 5, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: true, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const s3 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)

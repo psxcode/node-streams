@@ -15,7 +15,7 @@ const writableLog = debug('ns:writable')
 describe('[ combine ]', () => {
   it('lazy readables', async () => {
     const data = makeNumbers(3)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: false, delayMs: 12, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const s3 = readable({ eager: false, delayMs: 8, log: readableLog() })({ objectMode: true })(data)
@@ -45,7 +45,7 @@ describe('[ combine ]', () => {
 
   it('readable emits error', async () => {
     const data = makeNumbers(2)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: false, delayMs: 0, log: readableLog(), errorAtStep: 1 })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 0, log: readableLog() })({ objectMode: true })(data)
     const r = combine({ objectMode: true })(s1, s2)
@@ -69,7 +69,7 @@ describe('[ combine ]', () => {
   })
 
   it('no readables', async () => {
-    const spy = fn(() => {})
+    const spy = fn()
     const r = combine({ objectMode: true })()
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(w)

@@ -14,7 +14,7 @@ const writableLog = debug('ns:writable')
 describe('[ ofAsync ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = ofAsync({ objectMode: true })(interval(30))(...data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(w)

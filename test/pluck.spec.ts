@@ -25,7 +25,7 @@ const makeNumbers = (length: number): Iterable<{ value: number }> => ({
 describe('[ pluck ]', () => {
   it('should work', async () => {
     const data = makeNumbers(3)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r

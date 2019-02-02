@@ -15,7 +15,7 @@ const writableLog = debug('ns:writable')
 describe('[ concat ]', () => {
   it('should work', async () => {
     const data = [3, 4]
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: true, delayMs: 50, log: readableLog() })({ objectMode: true })(data)
     const r = startWith({ objectMode: true })(0, 1, 2)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

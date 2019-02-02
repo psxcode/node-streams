@@ -16,7 +16,7 @@ const isEven = (value: number) => value % 2 === 0
 describe('[ filter ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(isEven)

@@ -13,7 +13,7 @@ const writableLog = debug('ns:writable')
 describe('[ from ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = from({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(w)

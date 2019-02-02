@@ -14,7 +14,7 @@ const writableLog = debug('ns:writable')
 describe('[ delay ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: false, delayMs: 30, log: readableLog })({ objectMode: true })(data)
     const t = delayRaw()({ objectMode: true })(200)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

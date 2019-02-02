@@ -15,7 +15,7 @@ const consumerLog = debug('ns:consumer')
 describe('[ concat ]', () => {
   it('should work', async () => {
     const data = makeNumbers(3)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: false, delayMs: 20, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: true, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1, s2)
@@ -40,7 +40,7 @@ describe('[ concat ]', () => {
 
   it('readable emits error', async () => {
     const data = makeNumbers(3)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: false, delayMs: 20, log: readableLog(), errorAtStep: 1 })({ objectMode: true })(data)
     const s2 = readable({ eager: true, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1, s2)
@@ -64,7 +64,7 @@ describe('[ concat ]', () => {
   })
 
   it('no readables', async () => {
-    const spy = fn(() => {})
+    const spy = fn()
     const r = concat({ objectMode: true })()
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
     const p = r.pipe(w)

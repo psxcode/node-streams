@@ -14,7 +14,7 @@ const isEqual = <T> (a: T, b: T) => a === b
 describe('[ distinct ]', () => {
   it('should work', async () => {
     const data = [0, 1, 2, 2, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 9]
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, delayMs: 30, log: readableLog })({ objectMode: true })(data)
     const t = distinct({ objectMode: true })(isEqual)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

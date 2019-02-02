@@ -16,7 +16,7 @@ const addAll = (acc = 0, value: number) => acc + value
 describe('[ scan ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = scan({ objectMode: true })(addAll)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

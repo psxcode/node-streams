@@ -17,8 +17,8 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 describe('[ side ]', () => {
   it('shoudl work', async () => {
     const data = makeStrings(3)
-    const spy = fn(() => {})
-    const sideSpy = fn(() => {})
+    const spy = fn()
+    const sideSpy = fn()
     const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
     const t = side({ objectMode: true })(sideSpy)
     const w = writable({ log: writableLog })({ decodeStrings: false })(spy)

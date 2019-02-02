@@ -19,7 +19,7 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 describe('[ last ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r

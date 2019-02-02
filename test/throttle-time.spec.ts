@@ -14,7 +14,7 @@ const writableLog = debug('ns:writable')
 describe('[ throttleTime ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = throttleTime({ objectMode: true })(30)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)

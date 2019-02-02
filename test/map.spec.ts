@@ -17,7 +17,7 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 describe('[ map ]', () => {
   it('should work', async () => {
     const data = makeNumbers(6)
-    const spy = fn(() => {})
+    const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ encoding: 'utf8' })(data)
     const w = writable({ log: writableLog })({ decodeStrings: false })(spy)
     const t = map({ objectMode: true })(multiply(2))

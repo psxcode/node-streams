@@ -15,7 +15,7 @@ const writableLog = debug('ns:writable')
 describe('[ merge ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = fn(() => {})
+    const spy = fn()
     const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 13, log: readableLog() })({ objectMode: true })(data)
     const r = merge({ objectMode: true })(s1, s2)
