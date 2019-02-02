@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import reduce from '../src/reduce'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
@@ -16,7 +16,7 @@ const addAll = (acc = 0, value: number) => acc + value
 describe('[ reduce ]', () => {
   it('should work', async () => {
     const data = makeNumbers(3)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(addAll)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
@@ -24,7 +24,7 @@ describe('[ reduce ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [3],
     ])
     expect(numEvents(r)).eq(0)

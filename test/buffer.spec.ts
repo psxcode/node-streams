@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import buffer from '../src/buffer'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
@@ -22,7 +22,7 @@ const interval = (ms: number) => (next: () => void) => {
 describe('[ buffer ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = buffer({ objectMode: true })(interval(15))
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
@@ -30,7 +30,7 @@ describe('[ buffer ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [[0, 1]],
       [[2, 3]],
     ])
@@ -41,7 +41,7 @@ describe('[ buffer ]', () => {
 
   it('use transform \'flush\' function', async () => {
     const data = makeNumbers(4)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: false, delayMs: 5, log: readableLog })({ objectMode: true })(data)
     const t = buffer({ objectMode: true })(interval(30))
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
@@ -49,7 +49,7 @@ describe('[ buffer ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [[0, 1, 2, 3]],
     ])
     expect(numEvents(r)).eq(0)

@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "iterama": "^0.1.0",
-    "node-on": "^0.2.2"
+    "node-on": "^0.2.2",
+    "test-fn": "^0.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -41,7 +42,6 @@
     "node-stream-test": "^0.3.2",
     "nyc": "^13.1.0",
     "rimraf": "^2.6.3",
-    "spyfn": "^0.1.1",
     "time-test": "^0.1.0",
     "typescript": "^3.3.1"
   },

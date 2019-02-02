@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import pipe from '../src/pipe'
 import filter from '../src/filter'
 import map from '../src/map'
@@ -20,7 +20,7 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 describe('[ pipe ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const piped = pipe(
@@ -33,6 +33,6 @@ describe('[ pipe ]', () => {
 
     await finished(w)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(spy.calls).deep.eq([])
   })
 })

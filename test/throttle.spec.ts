@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import throttle from '../src/throttle'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
@@ -15,7 +15,7 @@ const writableLog = debug('ns:writable')
 describe('[ throttle ]', () => {
   it('shoudl work', async () => {
     const data = makeNumbers(8)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = throttle({ objectMode: true })(interval(30))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
@@ -23,7 +23,7 @@ describe('[ throttle ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([])
+    expect(spy.calls).deep.eq([])
     expect(numEvents(r)).eq(0)
     expect(numEvents(t)).eq(0)
     expect(numEvents(w)).eq(0)

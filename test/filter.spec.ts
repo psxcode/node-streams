@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import filter from '../src/filter'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
@@ -16,7 +16,7 @@ const isEven = (value: number) => value % 2 === 0
 describe('[ filter ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(isEven)
@@ -24,7 +24,7 @@ describe('[ filter ]', () => {
 
     await finished(p)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [0],
       [2],
       [4],

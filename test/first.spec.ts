@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
-import { createSpy, getSpyCalls } from 'spyfn'
+import fn from 'test-fn'
 import filter from '../src/filter'
 import first from '../src/first'
 import map from '../src/map'
@@ -19,7 +19,7 @@ const multiply = (multiplier: number) => (value: number) => value * multiplier
 describe('[ first ]', () => {
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(first({ objectMode: true })).pipe(w)
@@ -27,7 +27,7 @@ describe('[ first ]', () => {
     /* wait for readable */
     await finished(r)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [0],
     ])
     expect(numEvents(r)).eq(0)
@@ -36,7 +36,7 @@ describe('[ first ]', () => {
 
   it('should work', async () => {
     const data = makeNumbers(8)
-    const spy = createSpy(() => {})
+    const spy = fn(() => {})
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r
@@ -47,7 +47,7 @@ describe('[ first ]', () => {
 
     await finished(r)
 
-    expect(getSpyCalls(spy)).deep.eq([
+    expect(spy.calls).deep.eq([
       [10],
     ])
     expect(numEvents(r)).eq(0)
