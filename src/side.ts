@@ -9,7 +9,8 @@ const side = (opts: TransformOptions) => <T> (sideFn: (value: T) => void) =>
       } catch (e) {
         return callback(e)
       }
-      callback(undefined, chunk)
+      this.push(chunk !== null ? chunk : undefined)
+      callback()
     },
   })
 

@@ -24,7 +24,7 @@ describe('[ pipe ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const piped = pipe(
-      filter({ objectMode: true })(isEqual(10)),
+      filter({ objectMode: true })(isEqual(2)),
       first({ objectMode: true }),
       map({ objectMode: true })(multiply(2))
     )
@@ -33,6 +33,8 @@ describe('[ pipe ]', () => {
 
     await finished(w)
 
-    expect(spy.calls).deep.eq([])
+    expect(spy.calls).deep.eq([
+      [4],
+    ])
   })
 })

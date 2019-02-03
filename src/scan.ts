@@ -5,13 +5,16 @@ const scan = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T) =
 
   return new Transform({
     ...opts,
-    transform (chunk: any, encoding, callback) {
+    transform (chunk, encoding, callback) {
       try {
         state = reducer(state, chunk)
       } catch (e) {
-        return callback(e)
+        callback(e)
+
+        return
       }
-      callback(undefined, state)
+      this.push(state !== null ? state : undefined)
+      callback()
     },
   })
 }

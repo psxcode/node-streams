@@ -10,7 +10,10 @@ const filter = (opts: TransformOptions) => <T> (predicate: (value: T) => boolean
       } catch (e) {
         return callback(e)
       }
-      callback(undefined, res ? chunk : undefined)
+      if (res) {
+        this.push(chunk)
+      }
+      callback()
     },
   })
 

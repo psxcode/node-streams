@@ -30,4 +30,23 @@ describe('[debounce]', () => {
     expect(numEvents(t)).eq(0)
     expect(numEvents(w)).eq(0)
   })
+
+  it('should handle null and undefined', async () => {
+    const data = [null, undefined]
+    const spy = fn()
+    const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
+    const t = debounce({ objectMode: true })(interval(0))
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [undefined],
+      [undefined],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
 })

@@ -21,34 +21,15 @@ describe('[ first ]', () => {
     const data = makeNumbers(8)
     const spy = fn()
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
+    const t = first({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(first({ objectMode: true })).pipe(w)
+    const p = r.pipe(t).pipe(w)
 
     /* wait for readable */
     await finished(r)
 
     expect(spy.calls).deep.eq([
       [0],
-    ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
-  })
-
-  it('should work', async () => {
-    const data = makeNumbers(8)
-    const spy = fn()
-    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
-    const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r
-      .pipe(filter({ objectMode: true })(isEqual(5)))
-      .pipe(first({ objectMode: true }))
-      .pipe(map({ objectMode: true })(multiply(2)))
-      .pipe(w)
-
-    await finished(r)
-
-    expect(spy.calls).deep.eq([
-      [10],
     ])
     expect(numEvents(r)).eq(0)
     expect(numEvents(w)).eq(0)

@@ -12,10 +12,10 @@ const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
 describe('[ skip ]', () => {
-  it('should work', async () => {
+  it('skip first', async () => {
     const data = makeNumbers(4)
     const spy = fn()
-    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = skip({ objectMode: true })(2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const p = r.pipe(t).pipe(w)
@@ -24,6 +24,92 @@ describe('[ skip ]', () => {
 
     expect(spy.calls).deep.eq([
       [2], [3],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('skip last', async () => {
+    const data = makeNumbers(4)
+    const spy = fn()
+    const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
+    const t = skip({ objectMode: true })(-2)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [0], [1],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('skip zero', async () => {
+    const data = makeNumbers(4)
+    const spy = fn()
+    const r = readable({ eager: false, log: readableLog })({ objectMode: true })(data)
+    const t = skip({ objectMode: true })(0)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [0], [1], [2], [3],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('positive overflow', async () => {
+    const data = makeNumbers(4)
+    const spy = fn()
+    const r = readable({ eager: false, log: readableLog })({ objectMode: true })(data)
+    const t = skip({ objectMode: true })(8)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('negative overflow', async () => {
+    const data = makeNumbers(4)
+    const spy = fn()
+    const r = readable({ eager: false, log: readableLog })({ objectMode: true })(data)
+    const t = skip({ objectMode: true })(-8)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('should handle null and undefined', async () => {
+    const data = [null, undefined]
+    const spy = fn()
+    const r = readable({ eager: false, log: readableLog })({ objectMode: true })(data)
+    const t = skip({ objectMode: true })(0)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [undefined], [undefined],
     ])
     expect(numEvents(r)).eq(0)
     expect(numEvents(t)).eq(0)

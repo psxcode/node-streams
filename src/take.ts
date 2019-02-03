@@ -9,8 +9,12 @@ const takeFirst = (opts: TransformOptions) =>
       ...opts,
       transform (chunk, encoding, callback) {
         /* push properly delivers null */
-        this.push(i++ < numTake ? chunk : null)
-        callback(undefined)
+        if (i++ < numTake) {
+          this.push(chunk !== null ? chunk : undefined)
+        } else {
+          this.push(null)
+        }
+        callback()
       },
     })
   }
@@ -25,7 +29,7 @@ const takeLast = (opts: TransformOptions) =>
       transform (chunk, encoding, callback) {
         last.shift(chunk)
         ++numValues
-        callback(undefined)
+        callback()
       },
       flush (callback) {
         const it = last[Symbol.iterator]()
@@ -35,9 +39,9 @@ const takeLast = (opts: TransformOptions) =>
           it.next()
         }
         for (const chunk of it) {
-          this.push(chunk)
+          this.push(chunk !== null ? chunk : undefined)
         }
-        callback(undefined)
+        callback()
       },
     })
   }

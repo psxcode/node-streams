@@ -9,7 +9,7 @@ const debounce = (opts: TransformOptions) =>
     return new Transform({
       ...opts,
       transform (chunk, encoding, callback) {
-        lastChunk = chunk
+        lastChunk = chunk !== null ? chunk : undefined
         unsubscribe && unsubscribe()
         unsubscribe = wait(() => {
           unsubscribe = undefined
@@ -20,7 +20,8 @@ const debounce = (opts: TransformOptions) =>
       },
       flush (callback) {
         unsubscribe && unsubscribe()
-        callback(undefined, lastChunk)
+        this.push(lastChunk)
+        callback()
       },
     })
   }

@@ -14,7 +14,8 @@ const reduce = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T)
       callback()
     },
     flush (callback) {
-      callback(undefined, state)
+      this.push(state !== null ? state : undefined)
+      callback()
     },
   })
 }

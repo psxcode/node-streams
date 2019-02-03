@@ -9,7 +9,7 @@ const throttle = (opts: TransformOptions) =>
     return new Transform({
       ...opts,
       transform (chunk, encoding, callback) {
-        lastChunk = chunk
+        lastChunk = chunk !== null ? chunk : undefined
         if (!unsubscribe) {
           unsubscribe = wait(() => {
             unsubscribe = undefined
@@ -21,7 +21,8 @@ const throttle = (opts: TransformOptions) =>
       },
       flush (callback) {
         unsubscribe && unsubscribe()
-        callback(undefined, lastChunk)
+        this.push(lastChunk)
+        callback()
       },
     })
   }

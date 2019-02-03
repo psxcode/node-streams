@@ -8,9 +8,9 @@ const first = (opts: TransformOptions) => {
     transform (chunk, encoding, callback) {
       if (!fulfilled) {
         this.push(chunk)
-        this.push(null)
         fulfilled = true
       }
+      this.push(null)
       callback()
     },
   })

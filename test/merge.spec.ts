@@ -32,4 +32,36 @@ describe('[ merge ]', () => {
     expect(numEvents(s2)).eq(0)
     expect(numEvents(w)).eq(0)
   })
+
+  it('no readables', async () => {
+    const data = makeNumbers(4)
+    const spy = fn()
+    const r = merge({ objectMode: true })()
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it('should handle null and undefined', async () => {
+    const data = [null, undefined]
+    const spy = fn()
+    const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const r = merge({ objectMode: true })(s1)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [undefined], [undefined],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(s1)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
 })

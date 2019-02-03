@@ -56,4 +56,22 @@ describe('[ buffer ]', () => {
     expect(numEvents(t)).eq(0)
     expect(numEvents(w)).eq(0)
   })
+
+  it('should work with null and undefined', async () => {
+    const data = [null, undefined]
+    const spy = fn()
+    const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
+    const t = buffer({ objectMode: true })(interval(15))
+    const w = writable({ log: consumerLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [[null, undefined]],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(t)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
 })

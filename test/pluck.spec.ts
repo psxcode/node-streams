@@ -27,15 +27,31 @@ describe('[ pluck ]', () => {
     const data = makeNumbers(3)
     const spy = fn()
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const t = pluck({ objectMode: true })('value')
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r
-      .pipe(pluck({ objectMode: true })('value'))
-      .pipe(w)
+    const p = r.pipe(t).pipe(w)
 
     await finished(p)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2],
+    ])
+    expect(numEvents(r)).eq(0)
+    expect(numEvents(w)).eq(0)
+  })
+
+  it.only('not existing property', async () => {
+    const data = makeNumbers(3)
+    const spy = fn(debug('ns:sink'))
+    const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
+    const t = pluck({ objectMode: true })('not_existing')
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    const p = r.pipe(t).pipe(w)
+
+    await finished(p)
+
+    expect(spy.calls).deep.eq([
+      [undefined], [undefined], [undefined],
     ])
     expect(numEvents(r)).eq(0)
     expect(numEvents(w)).eq(0)

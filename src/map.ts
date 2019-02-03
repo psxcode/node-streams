@@ -10,7 +10,8 @@ const map = (opts: TransformOptions) => <T, R> (xf: (value: T) => R) =>
       } catch (e) {
         return callback(e)
       }
-      callback(undefined, res)
+      this.push(res)
+      callback()
     },
   })
 
