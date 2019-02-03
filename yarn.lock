@@ -1917,10 +1917,10 @@ node-releases@^1.1.3:
   dependencies:
     semver "^5.3.0"
 
-node-stream-test@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.2.tgz#5d845b154234d59d3a6ecda6f9a4fae789d117c9"
-  integrity sha512-obMFxZwx+YRwDChIVzh5g9EZSkumBi8PqRSpcQ3HnV3rxCFsFtXJBODtg1K4jUB2liDcfzEtzSGuCZSKvo3KvQ==
+node-stream-test@^0.3.3:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/node-stream-test/-/node-stream-test-0.3.3.tgz#38da19e1a9aeede649242d0e8567f5397d4d5328"
+  integrity sha512-akiSZs0FG01u0HOQjHooWurw6QxyWdsGkQo3zOPJUPKnDFaZKcT4Rb54elcFoHUgcNq2sNceVjhY7854m2i34w==
   dependencies:
     "@psxcode/wait" "^0.1.1"
     iterama "^0.1.0"

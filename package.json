@@ -40,7 +40,7 @@
     "eslint-plugin-typescript": "^1.0.0-0",
     "esm": "^3.2.0",
     "mocha": "^5.2.0",
-    "node-stream-test": "^0.3.2",
+    "node-stream-test": "^0.3.3",
     "nyc": "^13.1.0",
     "rimraf": "^2.6.3",
     "time-test": "^0.1.0",
