@@ -9,7 +9,7 @@ const skipFirst = (opts: TransformOptions) =>
       ...opts,
       transform (chunk, encoding, callback) {
         if (i++ >= numSkip) {
-          this.push(chunk !== null ? chunk : undefined)
+          this.push(chunk)
         }
         callback()
       },
@@ -26,7 +26,7 @@ const skipLast = (opts: TransformOptions) =>
       transform (chunk, encoding, callback) {
         const value = last.shift(chunk)
         if (i++ >= numSkip) {
-          this.push(value !== null ? value : undefined)
+          this.push(value)
         }
         callback()
       },

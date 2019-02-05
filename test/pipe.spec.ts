@@ -25,8 +25,10 @@ describe('[ pipe ]', () => {
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const piped = pipe(
       filter({ objectMode: true })(isEqual(2)),
-      first({ objectMode: true }),
-      map({ objectMode: true })(multiply(2))
+      pipe(
+        first({ objectMode: true }),
+        map({ objectMode: true })(multiply(2))
+      )
     )
     r.pipe(piped[0])
     piped[2].pipe(w)

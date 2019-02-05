@@ -10,7 +10,7 @@ const takeFirst = (opts: TransformOptions) =>
       transform (chunk, encoding, callback) {
         /* push properly delivers null */
         if (i++ < numTake) {
-          this.push(chunk !== null ? chunk : undefined)
+          this.push(chunk)
         } else {
           this.push(null)
         }
@@ -39,7 +39,7 @@ const takeLast = (opts: TransformOptions) =>
           it.next()
         }
         for (const chunk of it) {
-          this.push(chunk !== null ? chunk : undefined)
+          this.push(chunk)
         }
         callback()
       },

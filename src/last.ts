@@ -6,7 +6,7 @@ const last = (opts: TransformOptions) => {
   return new Transform({
     ...opts,
     transform (chunk, encoding, callback) {
-      value = chunk !== null ? chunk : undefined
+      value = chunk
       callback()
     },
     flush (callback) {

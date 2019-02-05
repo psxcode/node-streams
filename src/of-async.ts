@@ -12,7 +12,11 @@ const ofAsync = (opts: ReadableOptions) =>
         if (!unsubscribe) {
           unsubscribe = wait(() => {
             unsubscribe = undefined
-            this.push(i < values.length ? values[i++] : null)
+            let val
+
+            return i < values.length
+              ? this.push((val = values[i++]) !== null ? val : undefined)
+              : this.push(null)
           })
         }
       },

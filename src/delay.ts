@@ -1,4 +1,5 @@
-import { Transform, TransformOptions } from 'stream'
+import { Transform, TransformOptions, PassThrough } from 'stream'
+import { UnsubFn } from './types'
 
 type DelayItem = {
   timestamp: number
@@ -7,16 +8,20 @@ type DelayItem = {
 
 export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp = Date.now) =>
   (opts: TransformOptions) => (ms: number) => {
+    if (ms <= 0) {
+      return new PassThrough(opts)
+    }
+
     const buffer: DelayItem[] = []
     let inProgress = false
-    let endCallback: any
+    let endCallback: UnsubFn
 
     function consume (this: Transform) {
       const item = buffer.shift()
       inProgress = !!item
       if (item) {
         const shouldGoIn = item.timestamp - timestamp() + ms
-        if (shouldGoIn <= 10) {
+        if (shouldGoIn < 10) {
           this.push(item.data)
           consume.call(this)
         } else {
@@ -27,6 +32,7 @@ export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp 
         }
       } else {
         endCallback && endCallback()
+        endCallback = undefined
       }
     }
 
@@ -44,6 +50,9 @@ export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp 
       },
       flush (callback) {
         endCallback = callback
+        if (!inProgress) {
+          endCallback()
+        }
       },
     })
   }

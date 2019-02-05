@@ -40,7 +40,7 @@ describe('[ pluck ]', () => {
     expect(numEvents(w)).eq(0)
   })
 
-  it.only('not existing property', async () => {
+  it('not existing property', async () => {
     const data = makeNumbers(3)
     const spy = fn(debug('ns:sink'))
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)

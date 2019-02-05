@@ -8,7 +8,7 @@ const _from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
     ...opts,
     read () {
       let result = iterator.next()
-      while (!result.done && this.push(result.value)) {
+      while (!result.done && this.push(result.value !== null ? result.value : undefined)) {
         result = iterator.next()
       }
       if (result.done) {

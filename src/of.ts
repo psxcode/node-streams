@@ -6,7 +6,8 @@ const of = (opts: ReadableOptions) => <T> (...values: T[]) => {
   return new Readable({
     ...opts,
     read () {
-      while (i < values.length && this.push(values[i++]));
+      let value
+      while (i < values.length && this.push((value = values[i++]) !== null ? value : undefined));
       if (i >= values.length) this.push(null)
     },
   })

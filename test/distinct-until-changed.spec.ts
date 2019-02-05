@@ -10,7 +10,7 @@ import numEvents from './num-events'
 const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
-describe('[ distinct ]', () => {
+describe('[ distinctUntilChanged ]', () => {
   it('should work', async () => {
     const data = [0, 1, 2, 2, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 9, 9, 9]
     const spy = fn()
@@ -40,7 +40,7 @@ describe('[ distinct ]', () => {
     await finished(p)
 
     expect(spy.calls).deep.eq([
-      [undefined], [undefined],
+      [undefined],
     ])
     expect(numEvents(r)).eq(0)
     expect(numEvents(t)).eq(0)

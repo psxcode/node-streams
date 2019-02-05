@@ -68,7 +68,7 @@ describe('[ buffer ]', () => {
     await finished(p)
 
     expect(spy.calls).deep.eq([
-      [[null, undefined]],
+      [[undefined, undefined]],
     ])
     expect(numEvents(r)).eq(0)
     expect(numEvents(t)).eq(0)
