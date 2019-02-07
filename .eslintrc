@@ -341,6 +341,7 @@
       }
     ],
     "no-unused-vars": "off",
+    "typescript/no-unused-vars": "error",
     "no-undef": "off",
     "no-empty": "off",
     "no-cond-assign": "off",
