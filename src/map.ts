@@ -8,6 +8,8 @@ const map = (opts: TransformOptions) => <T, R> (xf: (value: T) => R) =>
       try {
         res = xf(chunk as any)
       } catch (e) {
+        this.push(null)
+
         return callback(e)
       }
       this.push(res)

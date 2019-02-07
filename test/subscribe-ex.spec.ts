@@ -44,10 +44,7 @@ describe('[ subscribeEx ]', () => {
     const s2 = readable({ eager: true, delayMs: 15, log: readableLog() })({ objectMode: true })(d2)
     subscribeEx({ next: spy, error: errorSpy, complete: completeSpy })(s1, s2)
 
-    await Promise.all([
-      finished(s1),
-      finished(s2),
-    ])
+    await finished(s1, s2)
 
     expect(spy.calls).deep.eq([
       [{ value: 0, index: 0, event: 'data', emitter: s1, emitterIndex: 0 }],
@@ -63,8 +60,7 @@ describe('[ subscribeEx ]', () => {
     expect(completeSpy.calls).deep.eq([
       [],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
+    expect(numEvents(s1, s2)).eq(0)
   })
 
   it('should work with unsubscribe', async () => {

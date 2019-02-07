@@ -14,12 +14,11 @@ describe('[ empty ]', () => {
     const spy = fn()
     const r = empty({ objectMode: true })
     const w = writable({ log })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(r, w)
 
     expect(spy.calls).deep.eq([])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, w)).eq(0)
   })
 })

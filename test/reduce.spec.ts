@@ -13,7 +13,7 @@ const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
 const addAll = (acc = 0, value: number) => acc + value
-const errorFn = (acc: any, value: any) => {
+const errorFn = () => {
   throw new Error('error in reducer')
 }
 
@@ -24,16 +24,14 @@ describe('[ reduce ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(addAll)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should work with null', async () => {
@@ -42,16 +40,14 @@ describe('[ reduce ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(() => null)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should work with undefined', async () => {
@@ -60,16 +56,14 @@ describe('[ reduce ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(() => undefined)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('error in reducer', async () => {
@@ -79,14 +73,10 @@ describe('[ reduce ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = reduce({ objectMode: true })(errorFn)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
     /* handle error */
-    t.on('error', (e) => {
-      errorSpy(e)
-      /* force readable to emit 'end' event */
-      r.resume()
-    })
+    t.once('error', errorSpy)
 
     await finished(r)
 
@@ -94,8 +84,6 @@ describe('[ reduce ]', () => {
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error in reducer'],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(3)
-    expect(numEvents(w)).eq(3)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

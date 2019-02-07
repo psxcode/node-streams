@@ -4,7 +4,7 @@ import subscribe from './subscribe'
 import { UnsubFn } from './types'
 
 const concat = (opts: ReadableOptions) =>
-  (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]): Readable => {
     let unsubscribe: UnsubFn
     let index = 0
 

@@ -18,16 +18,14 @@ describe('[ last ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = last({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should work with null', async () => {
@@ -36,16 +34,14 @@ describe('[ last ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = last({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should work with undefined', async () => {
@@ -54,15 +50,13 @@ describe('[ last ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const t = last({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

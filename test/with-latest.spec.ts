@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -12,19 +13,20 @@ import errorMessage from './error-message'
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
 const writableLog = debug('ns:writable')
+const destroyFn = (stream: Readable) => () => stream.destroy()
 
 describe('[ withLatest ]', () => {
   it('should work', async () => {
     const data = makeNumbers(4)
     const spy = fn()
-    const s1 = readable({ eager: false, delayMs: 20, log: readableLog() })({ objectMode: true })(data)
+    const s1 = readable({ eager: false, delayMs: 18, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
-    const s3 = readable({ eager: false, delayMs: 7, log: readableLog() })({ objectMode: true })(data)
+    const s3 = readable({ eager: false, delayMs: 6, log: readableLog() })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })(s2, s3)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, s2, s3, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, 0, 1]],
@@ -32,36 +34,26 @@ describe('[ withLatest ]', () => {
       [[2, 3, 3]],
       [[3, 3, 3]],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(s3)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, s3, r, w)).eq(0)
   })
 
   it('long data secondary stream', async () => {
-    const data = makeNumbers(4)
+    const data = makeNumbers(2)
     const longerData = makeNumbers(8)
     const spy = fn()
     const s1 = readable({ eager: false, delayMs: 0, log: readableLog() })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 0, log: readableLog() })({ objectMode: true })(longerData)
     const r = withLatest({ objectMode: true })(s2)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    /* wait for longer running stream */
-    await finished(s2)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, undefined]],
       [[1, 0]],
-      [[2, 1]],
-      [[3, 2]],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('no latest readables', async () => {
@@ -70,9 +62,9 @@ describe('[ withLatest ]', () => {
     const s1 = readable({ eager: false, delayMs: 20, log: readableLog() })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })()(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, r, w)
 
     expect(spy.calls).deep.eq([
       [[0]],
@@ -80,9 +72,7 @@ describe('[ withLatest ]', () => {
       [[2]],
       [[3]],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, r, w)).eq(0)
   })
 
   it('should handle error on main stream / error break', async () => {
@@ -94,22 +84,18 @@ describe('[ withLatest ]', () => {
     const s3 = readable({ eager: false, delayMs: 7, log: readableLog() })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })(s2, s3)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
     /* handle error */
-    r.on('error', errorSpy)
+    r.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, s3, r, w)
 
     expect(spy.calls).deep.eq([])
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error at 0'],
     ])
-    expect(numEvents(r)).eq(1)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(s3)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, s3, r, w)).eq(0)
   })
 
   it('should handle error on main stream / error continue', async () => {
@@ -121,12 +107,12 @@ describe('[ withLatest ]', () => {
     const s3 = readable({ eager: false, delayMs: 7, log: readableLog() })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })(s2, s3)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
     /* handle error */
-    r.on('error', errorSpy)
+    r.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, s3, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, 0, 1]],
@@ -134,11 +120,7 @@ describe('[ withLatest ]', () => {
       [[2, 3, 3]],
       [[3, 3, 3]],
     ])
-    expect(numEvents(r)).eq(1)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(s3)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, s3, r, w)).eq(0)
   })
 
   it('should handle error on \'latest\' stream / error break', async () => {
@@ -149,12 +131,12 @@ describe('[ withLatest ]', () => {
     const s2 = readable({ eager: false, delayMs: 10, log: readableLog(), errorAtStep: 0 })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })(s2)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
     /* handle error */
-    s2.on('error', errorSpy)
+    s2.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, undefined]],
@@ -165,10 +147,7 @@ describe('[ withLatest ]', () => {
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error at 0'],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(1)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('should handle error on \'latest\' stream / error continue', async () => {
@@ -179,12 +158,12 @@ describe('[ withLatest ]', () => {
     const s2 = readable({ eager: false, delayMs: 10, log: readableLog(), errorAtStep: 0, continueOnError: true })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })(s2)(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
     /* handle error */
-    s2.on('error', errorSpy)
+    s2.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, 0]],
@@ -195,10 +174,7 @@ describe('[ withLatest ]', () => {
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error at 0'],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(1)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -207,16 +183,68 @@ describe('[ withLatest ]', () => {
     const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
     const r = withLatest({ objectMode: true })()(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, r, w)
 
     expect(spy.calls).deep.eq([
       [[undefined]],
       [[undefined]],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, r, w)).eq(0)
+  })
+
+  it('should handle destroy of support stream', async () => {
+    const data = makeNumbers(4)
+    const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: false, delayMs: 5, log: readableLog() })({ objectMode: true })(data)
+    const spy = fn(destroyFn(s2))
+    const r = withLatest({ objectMode: true })(s2)(s1)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    r.pipe(w)
+
+    await finished(s1, s2, r, w)
+
+    expect(spy.calls).deep.eq([
+      [[0, 0]],
+      [[1, 0]],
+      [[2, 0]],
+      [[3, 0]],
+    ])
+    expect(numEvents(s1, s2, r, w)).eq(0)
+  })
+
+  it('should handle destroy of main stream', async () => {
+    const data = makeNumbers(4)
+    const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: false, delayMs: 5, log: readableLog() })({ objectMode: true })(data)
+    const spy = fn(destroyFn(s1))
+    const r = withLatest({ objectMode: true })(s2)(s1)
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    r.pipe(w)
+
+    await finished(s1, s2, r, w)
+
+    expect(spy.calls).deep.eq([
+      [[0, 0]],
+    ])
+    expect(numEvents(s1, s2, r, w)).eq(0)
+  })
+
+  it('should handle destroy', async () => {
+    const data = makeNumbers(4)
+    const s1 = readable({ eager: false, delayMs: 10, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: false, delayMs: 5, log: readableLog() })({ objectMode: true })(data)
+    const r = withLatest({ objectMode: true })(s2)(s1)
+    const spy = fn(destroyFn(r))
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    r.pipe(w)
+
+    await finished(s1, s2, r, w)
+
+    expect(spy.calls).deep.eq([
+      [[0, 0]],
+    ])
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 })

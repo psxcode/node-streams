@@ -3,9 +3,7 @@ import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
 import debug from 'debug'
 import fn from 'test-fn'
-import filter from '../src/filter'
 import first from '../src/first'
-import map from '../src/map'
 import makeNumbers from './make-numbers'
 import finished from './stream-finished'
 import numEvents from './num-events'
@@ -20,16 +18,14 @@ describe('[ first ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = first({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for readable */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle null', async () => {
@@ -38,16 +34,14 @@ describe('[ first ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = first({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for readable */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle undefined', async () => {
@@ -56,15 +50,13 @@ describe('[ first ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = first({ objectMode: true })
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for readable */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

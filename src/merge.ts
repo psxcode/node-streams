@@ -3,7 +3,7 @@ import subscribe from './subscribe'
 import { UnsubFn } from './types'
 import empty from './empty'
 
-const merge = (opts: ReadableOptions) => (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
+const merge = (opts: ReadableOptions) => (...streams: NodeJS.ReadableStream[]): Readable => {
   let unsubscribe: UnsubFn
 
   return streams.length

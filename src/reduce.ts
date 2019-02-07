@@ -9,6 +9,8 @@ const reduce = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T)
       try {
         state = reducer(state, chunk)
       } catch (e) {
+        this.push(null)
+
         return callback(e)
       }
       callback()

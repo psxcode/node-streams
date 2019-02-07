@@ -3,7 +3,7 @@ import subscribe from './subscribe'
 import subscribeEx from './subscribe-ex'
 
 const withLatest = (opts: ReadableOptions) =>
-  (...streams: NodeJS.ReadableStream[]) => (main: NodeJS.ReadableStream): NodeJS.ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]) => (main: NodeJS.ReadableStream) => {
     let unsubscribeMain: (() => void) | undefined
     let unsubscribeRest: (() => void) | undefined
     const latest = new Array(streams.length)
@@ -31,7 +31,10 @@ const withLatest = (opts: ReadableOptions) =>
           })(...streams)
         }
       },
-      destroy: unsub,
+      destroy () {
+        this.push(null)
+        unsub()
+      },
     })
   }
 

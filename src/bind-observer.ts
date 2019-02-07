@@ -1,6 +1,6 @@
 import { IObserver } from './types'
 
-const bindObserver = (observer: IObserver) => {
+const bindObserver = (observer: IObserver): IObserver => {
   const { next, error, complete } = observer
 
   return {

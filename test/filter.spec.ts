@@ -13,7 +13,7 @@ const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
 const isEven = (value: number) => value % 2 === 0
-const errorFn = (value: any) => {
+const errorFn = () => {
   throw new Error('error in predicate')
 }
 
@@ -24,16 +24,14 @@ describe('[ filter ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(isEven)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0], [2], [4], [6],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('error in predicate', async () => {
@@ -43,24 +41,18 @@ describe('[ filter ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(errorFn)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
     /* handle error */
-    t.on('error', (e) => {
-      errorSpy(e)
-      /* force readable to emit 'end' event */
-      r.resume()
-    })
+    t.once('error', errorSpy)
 
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([])
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error in predicate'],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(3)
-    expect(numEvents(w)).eq(3)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -69,15 +61,13 @@ describe('[ filter ]', () => {
     const r = readable({ eager: false, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = filter({ objectMode: true })(() => true)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

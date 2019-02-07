@@ -9,9 +9,9 @@ const scan = (opts: TransformOptions) => <T, R> (reducer: (state: R, value: T) =
       try {
         state = reducer(state, chunk)
       } catch (e) {
-        callback(e)
+        this.push(null)
 
-        return
+        return callback(e)
       }
       this.push(state !== null ? state : undefined)
       callback()

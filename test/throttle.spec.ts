@@ -19,16 +19,14 @@ describe('[ throttle ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = throttle({ objectMode: true })(interval(20))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [1], [3], [5], [7],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should always return last value', async () => {
@@ -37,16 +35,14 @@ describe('[ throttle ]', () => {
     const r = readable({ eager: true, delayMs: 0, log: readableLog })({ objectMode: true })(data)
     const t = throttle({ objectMode: true })(interval(20))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -55,15 +51,13 @@ describe('[ throttle ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = throttle({ objectMode: true })(interval(0))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

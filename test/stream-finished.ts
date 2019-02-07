@@ -1,21 +1,8 @@
-import { Stream } from 'stream'
 import { waitTimePromise } from '@psxcode/wait'
+import { onceAllPromise } from 'node-on'
 
-const streamFinished = async (stream: Stream) => {
-  await new Promise((resolve) => {
-    const unsub = () => {
-      stream.removeListener('end', unsub)
-      stream.removeListener('finish', unsub)
-      stream.removeListener('close', unsub)
-
-      resolve()
-    }
-
-    stream.addListener('end', unsub)
-    stream.addListener('finish', unsub)
-    stream.addListener('close', unsub)
-  })
-
+const streamFinished = async (...emitters: NodeJS.EventEmitter[]) => {
+  await onceAllPromise('end', 'finish', 'close')(...emitters)
   await waitTimePromise(10)
 }
 

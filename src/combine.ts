@@ -3,7 +3,7 @@ import empty from './empty'
 import subscribeEx from './subscribe-ex'
 import { UnsubFn } from './types'
 
-const combine = (opts: ReadableOptions) => (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
+const combine = (opts: ReadableOptions) => (...streams: NodeJS.ReadableStream[]): Readable => {
   let unsubscribe: UnsubFn
   const latest = streams.map(() => undefined)
 

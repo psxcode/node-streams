@@ -18,17 +18,14 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(3)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('take last', async () => {
@@ -37,17 +34,14 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(-3)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [5], [6], [7],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('take zero', async () => {
@@ -56,15 +50,12 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(0)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('take positive overflow', async () => {
@@ -73,17 +64,14 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(16)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2], [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('take negative overflow', async () => {
@@ -92,17 +80,14 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(-16)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2], [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -111,16 +96,13 @@ describe('[ take ]', () => {
     const r = readable({ eager: false, delayMs: 10, log: readableLog })({ objectMode: true })(data)
     const t = take({ objectMode: true })(2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    /* wait for longer running stream */
-    await finished(r)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

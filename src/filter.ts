@@ -8,6 +8,8 @@ const filter = (opts: TransformOptions) => <T> (predicate: (value: T) => boolean
       try {
         res = predicate(chunk as any)
       } catch (e) {
+        this.push(null)
+
         return callback(e)
       }
       if (res) {

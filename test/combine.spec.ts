@@ -21,9 +21,9 @@ describe('[ combine ]', () => {
     const s3 = readable({ eager: false, delayMs: 8, log: readableLog() })({ objectMode: true })(data)
     const r = combine({ objectMode: true })(s1, s2, s3)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, s2, s3, r, w)
 
     expect(spy.calls).deep.eq([
       [[undefined, undefined, 0]],
@@ -36,49 +36,42 @@ describe('[ combine ]', () => {
       [[1, 2, 2]],
       [[2, 2, 2]],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(s3)).eq(0)
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, s3, r, w)).eq(0)
   })
 
   it('readable emits error', async () => {
     const data = makeNumbers(2)
     const spy = fn()
+    const errorSpy = fn(debug('ns:error'))
     const s1 = readable({ eager: false, delayMs: 0, log: readableLog(), errorAtStep: 1 })({ objectMode: true })(data)
     const s2 = readable({ eager: false, delayMs: 0, log: readableLog() })({ objectMode: true })(data)
     const r = combine({ objectMode: true })(s1, s2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
     /* error is not propagated by pipe */
-    r.on('error', () => {})
+    r.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [[0, undefined]],
       [[0, 0]],
       [[0, 1]],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(r)).eq(1)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('no readables', async () => {
     const spy = fn()
     const r = combine({ objectMode: true })()
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(r, w)
 
     expect(spy.calls).deep.eq([])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -87,16 +80,14 @@ describe('[ combine ]', () => {
     const s1 = readable({ eager: false, delayMs: 12, log: readableLog() })({ objectMode: true })(data)
     const r = combine({ objectMode: true })(s1)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, r, w)
 
     expect(spy.calls).deep.eq([
       [[undefined]],
       [[undefined]],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, r, w)).eq(0)
   })
 })

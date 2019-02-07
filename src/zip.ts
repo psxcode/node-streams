@@ -5,13 +5,13 @@ import empty from './empty'
 import { UnsubFn } from './types'
 
 const zip = (opts: ReadableOptions) =>
-  (...streams: NodeJS.ReadableStream[]): NodeJS.ReadableStream => {
+  (...streams: NodeJS.ReadableStream[]) => {
     let unsubscribe: UnsubFn
     let unsubscribeEnd: UnsubFn
-    const latest: any[][] = streams.map(() => [])
-    const done: boolean[] = streams.map(() => false)
-    const checkDone = () => done.some((d, i) => d && !latest[i].length)
-    const hasValueForZip = () => latest.every((l) => l.length > 0)
+    const dataFromStreams: any[][] = streams.map(() => [])
+    const doneStreams: boolean[] = streams.map(() => false)
+    const checkDone = () => doneStreams.some((done, i) => done && dataFromStreams[i].length === 0)
+    const hasValueToZip = () => dataFromStreams.every((data) => data.length > 0)
     const unsub = () => {
       unsubscribe && unsubscribe()
       unsubscribeEnd && unsubscribeEnd()
@@ -26,9 +26,9 @@ const zip = (opts: ReadableOptions) =>
           if (!unsubscribe) {
             unsubscribe = subscribeEx({
               next: ({ value, emitterIndex }) => {
-                latest[emitterIndex].push(value)
-                if (hasValueForZip()) {
-                  this.push(latest.map((l) => l.shift()))
+                dataFromStreams[emitterIndex].push(value)
+                if (hasValueToZip()) {
+                  this.push(dataFromStreams.map((l) => l.shift()))
                   if (checkDone()) {
                     this.push(null)
                     unsub()
@@ -38,7 +38,7 @@ const zip = (opts: ReadableOptions) =>
               error: ({ value }) => this.emit('error', value),
             })(...streams)
             unsubscribeEnd = onEx('end')(({ emitterIndex }) => {
-              done[emitterIndex] = true
+              doneStreams[emitterIndex] = true
               if (checkDone()) {
                 this.push(null)
                 unsub()
@@ -46,7 +46,10 @@ const zip = (opts: ReadableOptions) =>
             })(...streams)
           }
         },
-        destroy: unsub,
+        destroy () {
+          this.push(null)
+          unsub()
+        },
       })
       : empty(opts)
   }

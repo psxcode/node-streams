@@ -13,7 +13,7 @@ const readableLog = debug('ns:readable')
 const writableLog = debug('ns:writable')
 
 const multiply = (multiplier: number) => (value: number) => value * multiplier
-const errorFn = (value: any) => {
+const errorFn = () => {
   throw new Error('error in xf')
 }
 
@@ -24,16 +24,14 @@ describe('[ map ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = map({ objectMode: true })(multiply(2))
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [0], [2], [4],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('error at xf', async () => {
@@ -43,14 +41,10 @@ describe('[ map ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = map({ objectMode: true })(errorFn)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
     /* handle error */
-    t.on('error', (e) => {
-      errorSpy(e)
-      /* force readable to emit 'end' event */
-      r.resume()
-    })
+    t.once('error', errorSpy)
 
     await finished(r)
 
@@ -58,9 +52,7 @@ describe('[ map ]', () => {
     expect(errorSpy.calls.map(errorMessage)).deep.eq([
       ['error in xf'],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(3)
-    expect(numEvents(w)).eq(3)
+    expect(numEvents(r, t, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -69,15 +61,13 @@ describe('[ map ]', () => {
     const r = readable({ eager: true, log: readableLog })({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     const t = map({ objectMode: true })((x) => x)
-    const p = r.pipe(t).pipe(w)
+    r.pipe(t).pipe(w)
 
-    await finished(p)
+    await finished(r, t, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(t)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, t, w)).eq(0)
   })
 })

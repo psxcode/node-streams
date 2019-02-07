@@ -22,6 +22,7 @@ const ofAsync = (opts: ReadableOptions) =>
       },
       destroy () {
         unsubscribe && unsubscribe()
+        this.push(null)
       },
     })
   }

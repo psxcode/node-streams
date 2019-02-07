@@ -10,6 +10,9 @@ const of = (opts: ReadableOptions) => <T> (...values: T[]) => {
       while (i < values.length && this.push((value = values[i++]) !== null ? value : undefined));
       if (i >= values.length) this.push(null)
     },
+    destroy () {
+      this.push(null)
+    },
   })
 }
 

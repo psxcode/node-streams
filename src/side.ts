@@ -7,6 +7,8 @@ const side = (opts: TransformOptions) => <T> (sideFn: (value: T) => void) =>
       try {
         sideFn(chunk)
       } catch (e) {
+        this.push(null)
+
         return callback(e)
       }
       this.push(chunk)

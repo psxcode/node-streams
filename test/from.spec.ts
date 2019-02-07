@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { writable } from 'node-stream-test'
@@ -9,6 +10,7 @@ import finished from './stream-finished'
 import numEvents from './num-events'
 
 const writableLog = debug('ns:writable')
+const destroyFn = (stream: Readable) => () => stream.destroy()
 
 describe('[ from ]', () => {
   it('should work', async () => {
@@ -16,15 +18,14 @@ describe('[ from ]', () => {
     const spy = fn()
     const r = from({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(r, w)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2], [3],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -32,14 +33,28 @@ describe('[ from ]', () => {
     const spy = fn()
     const r = from({ objectMode: true })(data)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(r, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, w)).eq(0)
+  })
+
+  it.only('should handle destroy', async () => {
+    const data = makeNumbers(4)
+    const r = from({ objectMode: true })(data)
+    const spy = fn(destroyFn(r))
+    const w = writable({ log: writableLog })({ objectMode: true })(spy)
+    r.pipe(w)
+
+    await finished(r, w)
+
+    expect(spy.calls).deep.eq([
+      [0],
+    ])
+    expect(numEvents(r, w)).eq(0)
   })
 })

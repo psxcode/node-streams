@@ -1,3 +1,4 @@
+import { Readable } from 'stream'
 import { expect } from 'chai'
 import { describe, it } from 'mocha'
 import { readable, writable } from 'node-stream-test'
@@ -11,6 +12,7 @@ import numEvents from './num-events'
 let i = 0
 const readableLog = () => debug(`ns:readable:${i++}`)
 const consumerLog = debug('ns:consumer')
+const destroyFn = (stream: Readable) => () => stream.destroy()
 
 describe('[ concat ]', () => {
   it('should work', async () => {
@@ -20,52 +22,46 @@ describe('[ concat ]', () => {
     const s2 = readable({ eager: true, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1, s2)
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [0], [1], [2], [0], [1], [2],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('readable emits error', async () => {
     const data = makeNumbers(3)
     const spy = fn()
+    const errorSpy = fn(debug('ns:error'))
     const s1 = readable({ eager: false, delayMs: 20, log: readableLog(), errorAtStep: 1 })({ objectMode: true })(data)
     const s2 = readable({ eager: true, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1, s2)
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    r.on('error', () => {})
+    r.once('error', errorSpy)
 
-    await finished(p)
+    await finished(s1, s2, r, w)
 
     expect(spy.calls).deep.eq([
       [0], [0], [1], [2],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(s2)).eq(0)
-    expect(numEvents(r)).eq(1)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, s2, r, w)).eq(0)
   })
 
   it('no readables', async () => {
     const spy = fn()
     const r = concat({ objectMode: true })()
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(r, w)
 
     expect(spy.calls).deep.eq([])
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(r, w)).eq(0)
   })
 
   it('should handle null and undefined', async () => {
@@ -74,15 +70,29 @@ describe('[ concat ]', () => {
     const s1 = readable({ eager: false, delayMs: 20, log: readableLog() })({ objectMode: true })(data)
     const r = concat({ objectMode: true })(s1)
     const w = writable({ log: consumerLog })({ objectMode: true })(spy)
-    const p = r.pipe(w)
+    r.pipe(w)
 
-    await finished(p)
+    await finished(s1, r, w)
 
     expect(spy.calls).deep.eq([
       [undefined], [undefined],
     ])
-    expect(numEvents(s1)).eq(0)
-    expect(numEvents(r)).eq(0)
-    expect(numEvents(w)).eq(0)
+    expect(numEvents(s1, r, w)).eq(0)
+  })
+
+  it('should handle destroy', async () => {
+    const data = makeNumbers(4)
+    const s1 = readable({ eager: false, delayMs: 20, log: readableLog() })({ objectMode: true })(data)
+    const r = concat({ objectMode: true })(s1)
+    const spy = fn(destroyFn(r as Readable))
+    const w = writable({ log: consumerLog })({ objectMode: true })(spy)
+    r.pipe(w)
+
+    await finished(s1, r, w)
+
+    expect(spy.calls).deep.eq([
+      [0],
+    ])
+    expect(numEvents(s1, r, w)).eq(0)
   })
 })

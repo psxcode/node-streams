@@ -15,6 +15,9 @@ const _from = (opts: ReadableOptions) => <T> (iterable: Iterable<T>) => {
         this.push(null)
       }
     },
+    destroy () {
+      this.push(null)
+    },
   })
 }
 
