@@ -4,7 +4,8 @@
     "module": "commonjs",
     "outDir": "build",
     "declaration": true,
-    "noEmit": false
+    "noEmit": false,
+    "inlineSourceMap": true
   },
   "include": [
     "src"
