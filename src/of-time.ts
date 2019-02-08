@@ -1,4 +1,4 @@
-import { Readable, ReadableOptions } from 'stream'
+import { ReadableOptions } from 'stream'
 import { waitTime } from '@psxcode/wait'
 import ofAsync from './of-async'
 

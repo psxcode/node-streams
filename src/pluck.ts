@@ -1,4 +1,4 @@
-import { Transform, TransformOptions } from 'stream'
+import { TransformOptions } from 'stream'
 import map from './map'
 
 const pluck = (opts: TransformOptions) => (propName: string) =>

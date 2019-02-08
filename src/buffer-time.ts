@@ -1,4 +1,4 @@
-import { Transform, TransformOptions } from 'stream'
+import { TransformOptions } from 'stream'
 import { waitTime } from '@psxcode/wait'
 import buffer from './buffer'
 

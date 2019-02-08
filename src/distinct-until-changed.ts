@@ -1,4 +1,4 @@
-import { Transform, TransformOptions } from 'stream'
+import { TransformOptions } from 'stream'
 import distinct from './distinct'
 
 const isEqual = <T>(a: T, b: T) => a === b

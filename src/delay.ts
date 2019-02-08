@@ -6,7 +6,7 @@ type DelayItem = {
   data: any
 }
 
-export const delayRaw = (timeout = setTimeout, cancel = clearTimeout, timestamp = Date.now) =>
+export const delayRaw = (timeout = setTimeout, timestamp = Date.now) =>
   (opts: TransformOptions) => (ms: number) => {
     if (ms <= 0) {
       return new PassThrough(opts)
