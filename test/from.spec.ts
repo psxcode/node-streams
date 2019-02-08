@@ -43,9 +43,9 @@ describe('[ from ]', () => {
     expect(numEvents(r, w)).eq(0)
   })
 
-  it.only('should handle destroy', async () => {
+  it('should handle destroy', async () => {
     const data = makeNumbers(4)
-    const r = from({ objectMode: true })(data)
+    const r = from({ objectMode: true, highWaterMark: 1 })(data)
     const spy = fn(destroyFn(r))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     r.pipe(w)
@@ -53,7 +53,7 @@ describe('[ from ]', () => {
     await finished(r, w)
 
     expect(spy.calls).deep.eq([
-      [0],
+      [0], [1],
     ])
     expect(numEvents(r, w)).eq(0)
   })

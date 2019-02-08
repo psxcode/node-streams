@@ -47,7 +47,7 @@ describe('[ ofAsync ]', () => {
   it('should handle destroy', async () => {
     const data = makeNumbers(4)
     const r = ofAsync({ objectMode: true })(interval(30))(...data)
-    const spy = fn(destroyFn(r))
+    const spy = fn(() => setImmediate(destroyFn(r)))
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     r.pipe(w)
 

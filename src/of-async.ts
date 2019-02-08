@@ -9,16 +9,14 @@ const ofAsync = (opts: ReadableOptions) =>
     return new Readable({
       ...opts,
       read () {
-        if (!unsubscribe) {
-          unsubscribe = wait(() => {
-            unsubscribe = undefined
-            let val
+        unsubscribe = wait(() => {
+          unsubscribe = undefined
+          let val
 
-            return i < values.length
-              ? this.push((val = values[i++]) !== null ? val : undefined)
-              : this.push(null)
-          })
-        }
+          return i < values.length
+            ? this.push((val = values[i++]) !== null ? val : undefined)
+            : this.push(null)
+        })
       },
       destroy () {
         unsubscribe && unsubscribe()
