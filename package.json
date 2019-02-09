@@ -1,6 +1,6 @@
 {
   "name": "node-streams",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "index.js",
   "module": "index.js",
   "typings": "index.d.ts",
