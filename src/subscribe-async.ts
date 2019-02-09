@@ -8,20 +8,32 @@ const subscribeAsync = ({ next, error, complete = noop }: IAsyncObserver) =>
     let readableIndex = 0
     let promise: Promise<void> | undefined = undefined
     let done = false
-    const consume = async () => {
-      if (promise) return
-
-      for (let i = 0; i < readables.length; ++i) {
+    const findNextReadable = () => {
+      if (readables[readableIndex]) {
+        return readables[readableIndex]
+      }
+      for (let i = 0 ; i < readables.length; ++i) {
         readableIndex = (readableIndex + 1) % readables.length
-        const readable = readables[readableIndex]
-        if (readable) {
-          let chunk
-          while (!done && (chunk = readable.read())) {
-            await (promise = next(chunk))
-          }
-          promise = undefined
-          readables[readableIndex] = undefined
+        if (readables[readableIndex]) {
+          return readables[readableIndex]
         }
+      }
+
+      return null
+    }
+    const consume = async () => {
+      if (done || promise) return
+
+      const readable = findNextReadable()
+      if (readable) {
+        let chunk
+        while (!done && (chunk = readable.read()) !== null) {
+          await (promise = next(chunk))
+        }
+        promise = undefined
+        readables[readableIndex] = undefined
+
+        setImmediate(consume)
       }
     }
     const onComplete = () => {
