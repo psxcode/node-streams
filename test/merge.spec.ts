@@ -90,7 +90,7 @@ describe('[ merge ]', () => {
     const spy = fn()
     const errorSpy = fn()
     const s1 = readable({ eager: false, delayMs: 10, log: readableLog(), errorAtStep: 0, continueOnError: true })({ objectMode: true })(data)
-    const s2 = readable({ eager: false, delayMs: 13, log: readableLog() })({ objectMode: true })(data)
+    const s2 = readable({ eager: false, delayMs: 11, log: readableLog() })({ objectMode: true })(data)
     const r = merge({ objectMode: true })(s1, s2)
     const w = writable({ log: writableLog })({ objectMode: true })(spy)
     r.pipe(w)
