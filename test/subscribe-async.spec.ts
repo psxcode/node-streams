@@ -22,8 +22,8 @@ const makeWait = (ms: number) => {
   }
 }
 
-describe('[ subscribeAsync ]', () => {
-  it('should work with single stream', async () => {
+describe.only('[ subscribeAsync ]', () => {
+  it.only('should work with single stream', async () => {
     const d1 = makeNumbers(4)
     const spy = fn(makeWait(10))
     const s1 = readable({ eager: true, log: readableLog() })({ objectMode: true })(d1)

@@ -4,10 +4,11 @@ import { IAsyncObserver } from './types'
 
 const subscribeAsync = ({ next, error, complete = noop }: IAsyncObserver) =>
   (...streams: NodeJS.ReadableStream[]) => {
+    let promise = Promise.resolve()
+    let consumerRejected = false
+    let inProgress = false
     const readables: (NodeJS.ReadableStream | undefined)[] = streams.map(() => undefined)
     let readableIndex = 0
-    let promise: Promise<void> | undefined = undefined
-    let done = false
     const findNextReadable = () => {
       if (readables[readableIndex]) {
         return readables[readableIndex]
@@ -21,38 +22,46 @@ const subscribeAsync = ({ next, error, complete = noop }: IAsyncObserver) =>
 
       return null
     }
-    const consume = async () => {
-      if (done || promise) return
+    const onReadable = async () => {
+      if (inProgress || consumerRejected) {
+        return
+      }
 
       const readable = findNextReadable()
       if (readable) {
-        let chunk
-        while (!done && (chunk = readable.read()) !== null) {
-          await (promise = next(chunk))
+        inProgress = true
+
+        let chunk: any
+        while (!consumerRejected && (chunk = readable.read()) !== null) {
+          await (promise = promise.then(() => next(chunk)).catch(unsubscribe))
         }
-        promise = undefined
         readables[readableIndex] = undefined
 
-        setImmediate(consume)
+        inProgress = false
+        setImmediate(onReadable)
+      }
+    }
+    const onError = (e: any) => {
+      if (error) {
+        promise = promise.then(() => error(e)).catch(unsubscribe)
       }
     }
     const onComplete = () => {
-      unsubscribe()
-      complete()
+      promise = promise.then(() => (unsubscribe(), complete()))
     }
     const unsub = [
       onEx('readable')(({ emitter, emitterIndex }) => {
         readables[emitterIndex] = emitter as NodeJS.ReadableStream
-        consume()
+        onReadable()
       })(...streams),
-      error ? on('error')(error)(...streams) : noop,
+      on('error')(onError)(...streams),
       onceAll('end')(onComplete)(...streams),
     ]
 
     return unsubscribe
 
     function unsubscribe () {
-      done = true
+      consumerRejected = true
       for (const u of unsub) u()
     }
   }
