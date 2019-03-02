@@ -42,9 +42,7 @@ const subscribeAsync = ({ next, error, complete = noop }: IAsyncObserver) =>
       }
     }
     const onError = (e: any) => {
-      if (error) {
-        promise = promise.then(() => error(e)).catch(unsubscribe)
-      }
+      promise = promise.then(() => error!(e)).catch(unsubscribe)
     }
     const onComplete = () => {
       promise = promise.then(() => (unsubscribe(), complete()))
@@ -54,7 +52,7 @@ const subscribeAsync = ({ next, error, complete = noop }: IAsyncObserver) =>
         readables[emitterIndex] = emitter as NodeJS.ReadableStream
         onReadable()
       })(...streams),
-      on('error')(onError)(...streams),
+      on('error')(error ? onError : noop)(...streams),
       onceAll('end')(onComplete)(...streams),
     ]
 
